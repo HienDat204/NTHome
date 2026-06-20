@@ -1,6 +1,13 @@
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = "file:../database/database.db";
+  console.log(
+    "[seed] DATABASE_URL is missing, using fallback file:../database/database.db",
+  );
+}
+
 const prisma = new PrismaClient();
 
 const seedData = {
