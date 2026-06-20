@@ -1,6 +1,9 @@
 import prisma from '@/lib/prisma'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export const metadata = {
   title: 'Admin Dashboard | Next Estate'
 }
