@@ -10,9 +10,9 @@ Thay đổi file `.env.local`:
 # Tạo secret ngẫu nhiên: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 NEXTAUTH_SECRET=your_random_secret_here_min_32_chars
 
-# Để production database
-DATABASE_URL="file:./database/database.db"
-# Hoặc PostgreSQL: DATABASE_URL="postgresql://user:password@localhost/dbname"
+# Vercel Postgres (auto-injected khi Connect Storage)
+POSTGRES_PRISMA_URL="postgresql://..."
+POSTGRES_URL_NON_POOLING="postgresql://..."
 
 # URL production
 NEXTAUTH_URL=https://yourdomain.com
@@ -53,11 +53,22 @@ git push origin main
 
 ### Bước 3: Cấu hình Environment
 
-Tại Vercel Dashboard > Settings > Environment Variables, thêm:
+Tại Vercel Dashboard > Storage, tạo Postgres và Connect vào project để Vercel tự bơm:
+
+```
+POSTGRES_PRISMA_URL
+POSTGRES_URL_NON_POOLING
+POSTGRES_URL
+POSTGRES_USER
+POSTGRES_HOST
+POSTGRES_PASSWORD
+POSTGRES_DATABASE
+```
+
+Thêm thủ công:
 
 ```
 NEXTAUTH_SECRET=your_secret_here
-DATABASE_URL=file:./database/database.db
 NEXTAUTH_URL=https://yourproject.vercel.app
 ```
 
@@ -66,13 +77,13 @@ NEXTAUTH_URL=https://yourproject.vercel.app
 Tại Vercel Dashboard > Deployments, chạy:
 
 ```bash
-npx prisma migrate deploy
+npx prisma db push
 npm run prisma:seed
 ```
 
 Hoặc thêm vào `package.json`:
 ```json
-"postinstall": "prisma migrate deploy && npm run prisma:seed"
+"postinstall": "prisma db push && npm run prisma:seed"
 ```
 
 ### Bước 5: Deploy
@@ -168,21 +179,15 @@ headers: async () => [{
 ### Backup Database
 
 ```bash
-# SQLite
-cp database/database.db database/backup_$(date +%Y%m%d).db
-
 # PostgreSQL
-pg_dump $DATABASE_URL > backup.sql
+pg_dump $POSTGRES_URL_NON_POOLING > backup.sql
 ```
 
 ### Restore Database
 
 ```bash
-# SQLite
-cp database/backup_20260620.db database/database.db
-
 # PostgreSQL
-psql $DATABASE_URL < backup.sql
+psql $POSTGRES_URL_NON_POOLING < backup.sql
 ```
 
 ## Monitoring & Logs

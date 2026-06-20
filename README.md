@@ -1,6 +1,6 @@
 # Real Estate Website - Next.js 15 + React 19
 
-Website bất động sản chuyên nghiệp, production-ready với Next.js 15, React 19, TailwindCSS, Prisma ORM và SQLite.
+Website bất động sản chuyên nghiệp, production-ready với Next.js 14, React 18, TailwindCSS, Prisma ORM và PostgreSQL.
 
 ## Tính năng
 
@@ -8,7 +8,7 @@ Website bất động sản chuyên nghiệp, production-ready với Next.js 15,
 - ✅ **Chi tiết động**: Metadata SEO, URL slug friendly, breadcrumb
 - ✅ **Admin Dashboard**: Quản lý bất động sản, dự án, bài viết, liên hệ
 - ✅ **Xác thực**: NextAuth với credentials provider
-- ✅ **Database**: SQLite + Prisma ORM
+- ✅ **Database**: PostgreSQL + Prisma ORM
 - ✅ **Responsive**: 100% mobile-friendly
 - ✅ **Performance**: Optimized images, fast load times
 
@@ -16,7 +16,7 @@ Website bất động sản chuyên nghiệp, production-ready với Next.js 15,
 
 - **Frontend**: Next.js 15, React 19, TailwindCSS, Framer Motion
 - **Backend**: Next.js API Routes
-- **Database**: SQLite + Prisma ORM
+- **Database**: PostgreSQL + Prisma ORM
 - **Auth**: NextAuth v5
 - **Styling**: TailwindCSS + @tailwindcss/typography
 - **Icons**: React Icons
@@ -36,7 +36,7 @@ npm run setup
 
 Hoặc từng bước:
 \`\`\`bash
-npx prisma migrate dev --name init
+npx prisma db push
 npm run prisma:seed
 \`\`\`
 
@@ -74,8 +74,6 @@ src/
 prisma/
 ├── schema.prisma                # Database schema
 └── seed.js                      # Seed data
-database/
-└── database.db                  # SQLite database
 public/
 └── uploads/                     # Upload folder
 \`\`\`
@@ -138,7 +136,8 @@ public/
 
 \`\`\`env
 NEXTAUTH_SECRET=change_this_secret_in_production
-DATABASE_URL="file:./database/database.db"
+POSTGRES_PRISMA_URL="postgresql://..."
+POSTGRES_URL_NON_POOLING="postgresql://..."
 NEXTAUTH_URL=http://localhost:3000
 \`\`\`
 

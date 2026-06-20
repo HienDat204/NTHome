@@ -4,15 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/with-default-db-url.js prisma migrate deploy && npm run prisma:seed && next build",
+    "build": "prisma db push && npm run prisma:seed && next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "node scripts/with-default-db-url.js prisma generate",
+    "postinstall": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init",
-    "prisma:deploy": "node scripts/with-default-db-url.js prisma migrate deploy",
-    "prisma:seed": "node scripts/with-default-db-url.js node prisma/seed.js",
+    "prisma:deploy": "prisma db push",
+    "prisma:seed": "node prisma/seed.js",
     "prisma:studio": "prisma studio",
-    "setup": "npm install && npx prisma migrate dev && npm run prisma:seed"
+    "setup": "npm install && prisma db push && npm run prisma:seed"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",
