@@ -1,8 +1,22 @@
-import { PrismaClient } from '@prisma/client'
+import { createRequire } from 'module'
 
 const globalForPrisma = globalThis
+const require = createRequire(import.meta.url)
+
+let PrismaClientCtor
+
+function getPrismaClientCtor() {
+  if (!PrismaClientCtor) {
+    const { PrismaClient } = require('@prisma/client')
+    PrismaClientCtor = PrismaClient
+  }
+
+  return PrismaClientCtor
+}
 
 function getPrismaClient() {
+  const PrismaClient = getPrismaClientCtor()
+
   if (process.env.NODE_ENV === 'production') {
     if (!globalForPrisma.prisma) {
       globalForPrisma.prisma = new PrismaClient()
