@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma migrate deploy && npm run prisma:seed && next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:deploy": "prisma migrate deploy",
     "prisma:seed": "node prisma/seed.js",
     "prisma:studio": "prisma studio",
     "setup": "npm install && npx prisma migrate dev && npm run prisma:seed"

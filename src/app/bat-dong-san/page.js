@@ -6,7 +6,15 @@ export const dynamic = "force-dynamic";
 const filters = ["Hà Nội", "TP HCM", "Đà Nẵng", "Căn hộ", "Biệt thự"];
 
 async function getProperties() {
-  return prisma.property.findMany({ orderBy: { createdAt: "desc" }, take: 12 });
+  try {
+    return await prisma.property.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 12,
+    });
+  } catch (error) {
+    console.error("PropertiesPage DB fallback:", error);
+    return [];
+  }
 }
 
 export default async function PropertiesPage() {

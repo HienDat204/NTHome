@@ -3,7 +3,12 @@ import prisma from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 
 async function getProject(slug) {
-  return prisma.project.findUnique({ where: { slug } });
+  try {
+    return await prisma.project.findUnique({ where: { slug } });
+  } catch (error) {
+    console.error("ProjectDetailPage DB fallback:", error);
+    return null;
+  }
 }
 
 export default async function ProjectDetailPage({ params }) {

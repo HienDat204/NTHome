@@ -4,7 +4,12 @@ import prisma from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 
 async function getArticles() {
-  return prisma.article.findMany({ orderBy: { createdAt: "desc" } });
+  try {
+    return await prisma.article.findMany({ orderBy: { createdAt: "desc" } });
+  } catch (error) {
+    console.error("ArticlesPage DB fallback:", error);
+    return [];
+  }
 }
 
 export default async function ArticlesPage() {

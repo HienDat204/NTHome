@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireAdminWriteAccess } from "@/lib/admin-api-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -35,6 +36,9 @@ export async function GET(request, { params }) {
 
 export async function PUT(request, { params }) {
   try {
+    const deniedResponse = await requireAdminWriteAccess(request);
+    if (deniedResponse) return deniedResponse;
+
     const id = await getArticleId(params);
     if (!id) {
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
@@ -55,6 +59,9 @@ export async function PUT(request, { params }) {
 
 export async function DELETE(request, { params }) {
   try {
+    const deniedResponse = await requireAdminWriteAccess(request);
+    if (deniedResponse) return deniedResponse;
+
     const id = await getArticleId(params);
     if (!id) {
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });

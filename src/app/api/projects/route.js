@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { requireAdminWriteAccess } from '@/lib/admin-api-guard'
 
 export async function GET() {
   try {
@@ -13,6 +14,9 @@ export async function GET() {
 
 export async function POST(request) {
   try {
+    const deniedResponse = await requireAdminWriteAccess(request)
+    if (deniedResponse) return deniedResponse
+
     const data = await request.json()
     const newProject = await prisma.project.create({ data })
     return NextResponse.json(newProject, { status: 201 })

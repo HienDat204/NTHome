@@ -20,7 +20,7 @@ export default function ContactPage() {
             <p className="text-lg font-semibold text-slate-900">Hà Nội, Việt Nam</p>
           </div>
         </div>
-        <form action="/api/contacts" className="rounded-[2rem] bg-white p-8 shadow-lg shadow-slate-200/60">
+        <form className="rounded-[2rem] bg-white p-8 shadow-lg shadow-slate-200/60">
           <div className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-slate-700">Họ tên</label>
@@ -38,7 +38,7 @@ export default function ContactPage() {
               <label className="block text-sm font-medium text-slate-700">Tin nhắn</label>
               <textarea name="message" rows="4" required className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20" />
             </div>
-            <button type="submit" className="w-full rounded-full bg-secondary px-6 py-3 text-base font-semibold text-white hover:bg-blue-600">Gửi thông tin</button>
+            <button type="button" disabled className="w-full rounded-full bg-secondary px-6 py-3 text-base font-semibold text-white hover:bg-blue-600">Chỉ gửi từ trang admin</button>
           </div>
         </form>
       </div>

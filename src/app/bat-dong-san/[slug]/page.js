@@ -4,10 +4,15 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 async function getProperty(slug) {
-  return prisma.property.findUnique({
-    where: { slug },
-    include: { images: true },
-  });
+  try {
+    return await prisma.property.findUnique({
+      where: { slug },
+      include: { images: true },
+    });
+  } catch (error) {
+    console.error("PropertyDetailPage DB fallback:", error);
+    return null;
+  }
 }
 
 export default async function PropertyDetailPage({ params }) {
@@ -92,7 +97,7 @@ export default async function PropertyDetailPage({ params }) {
             <h2 className="text-2xl font-semibold text-slate-900">
               Liên hệ nhanh
             </h2>
-            <form action="/api/contacts" className="mt-6 space-y-4">
+            <form className="mt-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700">
                   Họ tên
@@ -139,10 +144,11 @@ export default async function PropertyDetailPage({ params }) {
                 />
               </div>
               <button
-                type="submit"
+                type="button"
+                disabled
                 className="w-full rounded-full bg-secondary px-6 py-3 text-base font-semibold text-white hover:bg-blue-600"
               >
-                Gửi yêu cầu
+                Chỉ gửi từ trang admin
               </button>
             </form>
           </div>

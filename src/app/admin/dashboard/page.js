@@ -9,13 +9,18 @@ export const metadata = {
 }
 
 async function getStats() {
-  const [properties, projects, articles, contacts] = await Promise.all([
-    prisma.property.count(),
-    prisma.project.count(),
-    prisma.article.count(),
-    prisma.contact.count()
-  ])
-  return { properties, projects, articles, contacts }
+  try {
+    const [properties, projects, articles, contacts] = await Promise.all([
+      prisma.property.count(),
+      prisma.project.count(),
+      prisma.article.count(),
+      prisma.contact.count()
+    ])
+    return { properties, projects, articles, contacts }
+  } catch (error) {
+    console.error('AdminDashboard DB fallback:', error)
+    return { properties: 0, projects: 0, articles: 0, contacts: 0 }
+  }
 }
 
 export default async function DashboardPage() {

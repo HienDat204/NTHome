@@ -8,15 +8,23 @@ import TinTucSection from "@/components/home/TinTucSection";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [projects, propertiesRaw, articlesRaw] = await Promise.all([
-    prisma.project.findMany({ take: 6, orderBy: { id: "desc" } }),
-    prisma.property.findMany({
-      take: 8,
-      orderBy: { createdAt: "desc" },
-      include: { images: true },
-    }),
-    prisma.article.findMany({ take: 6, orderBy: { createdAt: "desc" } }),
-  ]);
+  let projects = [];
+  let propertiesRaw = [];
+  let articlesRaw = [];
+
+  try {
+    [projects, propertiesRaw, articlesRaw] = await Promise.all([
+      prisma.project.findMany({ take: 6, orderBy: { id: "desc" } }),
+      prisma.property.findMany({
+        take: 8,
+        orderBy: { createdAt: "desc" },
+        include: { images: true },
+      }),
+      prisma.article.findMany({ take: 6, orderBy: { createdAt: "desc" } }),
+    ]);
+  } catch (error) {
+    console.error("HomePage DB fallback:", error);
+  }
 
   // Serialize BigInt price to string for client components
   const properties = propertiesRaw.map((p) => ({

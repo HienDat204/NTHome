@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server'
+import { requireAdminWriteAccess } from '@/lib/admin-api-guard'
 
 export async function POST(request) {
   try {
+    const deniedResponse = await requireAdminWriteAccess(request)
+    if (deniedResponse) return deniedResponse
+
     const formData = await request.formData()
     const file = formData.get('file')
 

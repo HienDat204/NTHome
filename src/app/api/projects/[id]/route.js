@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { requireAdminWriteAccess } from '@/lib/admin-api-guard'
 
 export async function GET(request, { params }) {
   try {
@@ -16,6 +17,9 @@ export async function GET(request, { params }) {
 
 export async function PUT(request, { params }) {
   try {
+    const deniedResponse = await requireAdminWriteAccess(request)
+    if (deniedResponse) return deniedResponse
+
     const data = await request.json()
     const updated = await prisma.project.update({
       where: { id: parseInt(params.id) },
@@ -30,6 +34,9 @@ export async function PUT(request, { params }) {
 
 export async function DELETE(request, { params }) {
   try {
+    const deniedResponse = await requireAdminWriteAccess(request)
+    if (deniedResponse) return deniedResponse
+
     await prisma.project.delete({ where: { id: parseInt(params.id) } })
     return NextResponse.json(null, { status: 204 })
   } catch (error) {
