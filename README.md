@@ -48,9 +48,6 @@ npm run dev
 Truy cập: http://localhost:3000
 
 ## Đăng nhập Admin
-
-- **Email**: admin@example.com
-- **Password**: 123456
 - **URL**: http://localhost:3000/admin/login
 
 ## Cấu trúc dự án
