@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import prisma from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+
 const filters = ['Hà Nội', 'TP HCM', 'Đà Nẵng', 'Căn hộ', 'Biệt thự']
 
 async function getProperties() {

@@ -1,9 +1,6 @@
 import prisma from '@/lib/prisma'
 
-export async function generateStaticParams() {
-  const projects = await prisma.project.findMany({ select: { slug: true } })
-  return projects.map((project) => ({ slug: project.slug }))
-}
+export const dynamic = 'force-dynamic'
 
 async function getProject(slug) {
   return prisma.project.findUnique({ where: { slug } })

@@ -5,6 +5,8 @@ import BanNhaSection from '@/components/home/BanNhaSection'
 import ChoThueSection from '@/components/home/ChoThueSection'
 import TinTucSection from '@/components/home/TinTucSection'
 
+export const dynamic = 'force-dynamic'
+
 export default async function HomePage() {
   const [projects, propertiesRaw, articlesRaw] = await Promise.all([
     prisma.project.findMany({ take: 6, orderBy: { id: 'desc' } }),

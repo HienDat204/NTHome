@@ -1,10 +1,7 @@
 import prisma from '@/lib/prisma'
 import Link from 'next/link'
 
-export async function generateStaticParams() {
-  const properties = await prisma.property.findMany({ select: { slug: true } })
-  return properties.map((property) => ({ slug: property.slug }))
-}
+export const dynamic = 'force-dynamic'
 
 async function getProperty(slug) {
   return prisma.property.findUnique({
