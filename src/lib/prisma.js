@@ -16,16 +16,25 @@ function getPrismaClientCtor() {
 
 function getPrismaClient() {
   const PrismaClient = getPrismaClientCtor();
+  const databaseUrl =
+    process.env.DATABASE_URL || "file:../database/database.db";
+  const options = {
+    datasources: {
+      db: {
+        url: databaseUrl,
+      },
+    },
+  };
 
   if (process.env.NODE_ENV === "production") {
     if (!globalForPrisma.prisma) {
-      globalForPrisma.prisma = new PrismaClient();
+      globalForPrisma.prisma = new PrismaClient(options);
     }
     return globalForPrisma.prisma;
   }
 
   if (!globalForPrisma.prisma) {
-    globalForPrisma.prisma = new PrismaClient();
+    globalForPrisma.prisma = new PrismaClient(options);
   }
 
   return globalForPrisma.prisma;
