@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../database/database.db"
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Property {
+  id          Int             @id @default(autoincrement())
+  title       String
+  slug        String          @unique
+  description String
+  price       BigInt
+  area        Int
+  bedrooms    Int
+  bathrooms   Int
+  address     String
+  city        String
+  district    String
+  propertyType String
+  thumbnail   String
+  featured    Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+  images      PropertyImage[]
+}
+
+model PropertyImage {
+  id         Int      @id @default(autoincrement())
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId Int
+  imageUrl   String
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String   @unique
+  investor    String
+  address     String
+  description String
+  thumbnail   String
+}
+
+model Article {
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String   @unique
+  excerpt   String
+  content   String
+  thumbnail String
+  createdAt DateTime @default(now())
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  id       Int    @id @default(autoincrement())
+  siteName String
+  logo     String
+  hotline  String
+  email    String
+  facebook String
+  zalo     String
+  address  String
+}

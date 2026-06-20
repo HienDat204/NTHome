@@ -1,0 +1,6 @@
+node_modules
+.next
+.env
+database/database.db
+public/uploads
+.DS_Store
