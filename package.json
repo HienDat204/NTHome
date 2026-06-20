@@ -10,7 +10,7 @@
     "postinstall": "node scripts/with-default-db-url.js prisma generate",
     "prisma:migrate": "prisma migrate dev --name init",
     "prisma:deploy": "node scripts/with-default-db-url.js prisma migrate deploy",
-    "prisma:seed": "node prisma/seed.js",
+    "prisma:seed": "node scripts/with-default-db-url.js node prisma/seed.js",
     "prisma:studio": "prisma studio",
     "setup": "npm install && npx prisma migrate dev && npm run prisma:seed"
   },
