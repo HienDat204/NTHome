@@ -5,7 +5,8 @@ import { requireAdminWriteAccess } from '@/lib/admin-api-guard'
 export async function GET(request, { params }) {
   try {
     const project = await prisma.project.findUnique({
-      where: { id: parseInt(params.id) }
+      where: { id: parseInt(params.id) },
+      include: { images: { orderBy: { id: 'asc' } } }
     })
     if (!project) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     return NextResponse.json(project)
@@ -38,7 +39,7 @@ export async function DELETE(request, { params }) {
     if (deniedResponse) return deniedResponse
 
     await prisma.project.delete({ where: { id: parseInt(params.id) } })
-    return NextResponse.json(null, { status: 204 })
+    return new NextResponse(null, { status: 204 })
   } catch (error) {
     console.error('DELETE /api/projects/[id] error:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })

@@ -2,21 +2,22 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { LISTING_TYPES } from '@/lib/listings'
 
 const TABS = [
-  { key: 'mua', label: 'Mua Nhà', href: '/bat-dong-san' },
-  { key: 'thue', label: 'Thuê Nhà', href: '/bat-dong-san' },
+  { key: LISTING_TYPES.sale.value, label: 'Mua Nhà', href: LISTING_TYPES.sale.path },
+  { key: LISTING_TYPES.rent.value, label: 'Thuê Nhà', href: LISTING_TYPES.rent.path },
   { key: 'du-an', label: 'Dự Án', href: '/du-an' },
 ]
 
 export default function HeroSection() {
-  const [activeTab, setActiveTab] = useState('mua')
+  const [activeTab, setActiveTab] = useState(LISTING_TYPES.sale.value)
   const [query, setQuery] = useState('')
   const router = useRouter()
 
   const handleSearch = (e) => {
     e.preventDefault()
-    const tab = TABS.find(t => t.key === activeTab)
+    const tab = TABS.find(t => t.key === activeTab) || TABS[0]
     router.push(`${tab.href}${query ? `?q=${encodeURIComponent(query)}` : ''}`)
   }
 

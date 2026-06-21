@@ -13,8 +13,25 @@ export default function AdminProjectsPage() {
 
   const removeProject = async (id) => {
     if (!confirm('Xóa dự án này?')) return
-    await axios.delete(`/api/projects/${id}`)
-    setProjects(projects.filter((project) => project.id !== id))
+
+    try {
+      const response = await axios.delete(`/api/projects/${id}`)
+
+      // Chỉ xóa khỏi state nếu API call thành công
+      if (response.status === 204 || response.status === 200) {
+        setProjects(projects.filter((project) => project.id !== id))
+        alert('✅ Đã xóa thành công!')
+      }
+    } catch (error) {
+      console.error('Failed to delete project:', error)
+
+      // Hiển thị lỗi cụ thể cho user
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        alert('❌ Lỗi: Bạn chưa đăng nhập hoặc không có quyền xóa!')
+      } else {
+        alert('❌ Lỗi khi xóa: ' + (error.response?.data?.error || error.message))
+      }
+    }
   }
 
   return (
@@ -30,6 +47,11 @@ export default function AdminProjectsPage() {
         {projects.map((project) => (
           <div key={project.id} className="rounded-3xl bg-white p-6 shadow-lg shadow-slate-200/50">
             <h2 className="text-xl font-semibold text-slate-900">{project.name}</h2>
+            {project.highlightInfo && (
+              <p className="mt-2 inline-flex rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-600">
+                {project.highlightInfo}
+              </p>
+            )}
             <p className="mt-3 text-slate-600 line-clamp-4">{project.description}</p>
             <div className="mt-4 flex items-center justify-between text-sm text-slate-500">
               <span>{project.investor}</span>

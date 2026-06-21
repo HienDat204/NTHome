@@ -9,7 +9,8 @@ export default function NewPropertyPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [thumbnailPreview, setThumbnailPreview] = useState('')
+  const [additionalImages, setAdditionalImages] = useState([])
+  const [uploadingImages, setUploadingImages] = useState(false)
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
@@ -22,7 +23,8 @@ export default function NewPropertyPage() {
     city: '',
     district: '',
     propertyType: 'Căn hộ',
-    thumbnail: '',
+    listingType: 'sale',
+    promoBadge: '',
     featured: false
   })
 
@@ -34,27 +36,45 @@ export default function NewPropertyPage() {
     }))
   }
 
-  const handleThumbnailUpload = async (e) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+  const handleAdditionalImagesUpload = async (e) => {
+    const files = Array.from(e.target.files || [])
+    if (files.length === 0) return
+
+    setUploadingImages(true)
+    setError('')
 
     try {
-      const formDataObj = new FormData()
-      formDataObj.append('file', file)
-      
-      const response = await axios.post('/api/upload', formDataObj, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+      const uploadPromises = files.map(async (file) => {
+        const formDataObj = new FormData()
+        formDataObj.append('file', file)
+
+        const response = await axios.post('/api/upload', formDataObj, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        })
+
+        return response.data.image
       })
 
-      setThumbnailPreview(response.data.image)
-      setFormData(prev => ({ ...prev, thumbnail: response.data.image }))
+      const uploadedImages = await Promise.all(uploadPromises)
+      setAdditionalImages(prev => [...prev, ...uploadedImages])
     } catch (err) {
       setError('Lỗi upload ảnh: ' + (err.response?.data?.error || err.message))
+    } finally {
+      setUploadingImages(false)
     }
+  }
+
+  const removeAdditionalImage = (index) => {
+    setAdditionalImages(prev => prev.filter((_, i) => i !== index))
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (additionalImages.length === 0) {
+      setError('Vui lòng tải lên ít nhất 1 ảnh chi tiết')
+      return
+    }
+
     setLoading(true)
     setError('')
     try {
@@ -63,7 +83,8 @@ export default function NewPropertyPage() {
         price: parseInt(formData.price),
         area: parseInt(formData.area),
         bedrooms: parseInt(formData.bedrooms) || 0,
-        bathrooms: parseInt(formData.bathrooms) || 0
+        bathrooms: parseInt(formData.bathrooms) || 0,
+        additionalImages: additionalImages
       })
       router.push('/admin/properties')
     } catch (err) {
@@ -220,19 +241,64 @@ export default function NewPropertyPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700">Ảnh thumbnail</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleThumbnailUpload}
+              <label className="block text-sm font-medium text-slate-700">Loại tin</label>
+              <select
+                name="listingType"
+                value={formData.listingType}
+                onChange={handleChange}
                 className="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-secondary/50"
-              />
-              {thumbnailPreview && (
-                <div className="mt-3 rounded-lg overflow-hidden">
-                  <img src={thumbnailPreview} alt="Preview" className="w-full h-48 object-cover rounded-lg" />
-                </div>
-              )}
+              >
+                <option value="sale">Bán nhà</option>
+                <option value="rent">Cho thuê</option>
+              </select>
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700">Thông tin nổi bật</label>
+            <input
+              type="text"
+              name="promoBadge"
+              value={formData.promoBadge}
+              onChange={handleChange}
+              placeholder="Ví dụ: Full nội thất, Pháp lý rõ ràng..."
+              className="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-secondary/50"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700">Ảnh chi tiết (nhiều ảnh)</label>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleAdditionalImagesUpload}
+              disabled={uploadingImages}
+              className="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-secondary/50"
+            />
+            {uploadingImages && (
+              <p className="mt-2 text-sm text-blue-600">Đang upload ảnh...</p>
+            )}
+            {additionalImages.length > 0 && (
+              <div className="mt-4 grid grid-cols-3 gap-3">
+                {additionalImages.map((img, index) => (
+                  <div key={index} className="relative group">
+                    <img
+                      src={img}
+                      alt={`Ảnh ${index + 1}`}
+                      className="w-full h-32 object-cover rounded-lg border border-slate-200"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeAdditionalImage(index)}
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-2">

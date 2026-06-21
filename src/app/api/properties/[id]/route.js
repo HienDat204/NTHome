@@ -6,7 +6,7 @@ export async function GET(request, { params }) {
   try {
     const property = await prisma.property.findUnique({
       where: { id: parseInt(params.id) },
-      include: { images: true }
+      include: { images: { orderBy: { id: 'asc' } } }
     })
     if (!property) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     return NextResponse.json({ ...property, price: property.price.toString() })
@@ -41,7 +41,7 @@ export async function DELETE(request, { params }) {
     if (deniedResponse) return deniedResponse
 
     await prisma.property.delete({ where: { id: parseInt(params.id) } })
-    return NextResponse.json(null, { status: 204 })
+    return new NextResponse(null, { status: 204 })
   } catch (error) {
     console.error('DELETE /api/properties/[id] error:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })

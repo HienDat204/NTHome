@@ -3,49 +3,70 @@
 import { useState } from 'react'
 import Link from 'next/link'
 
-const STATUSES = ['Đang mở bán', 'Sắp mở bán', 'Đang mở bán']
-const PROMOS = ['Thanh toán 30% nhận nhà', 'Tặng nội thất 1 tỷ', 'Hỗ trợ vay 70%']
+export default function ProjectCard({ project }) {
+  const images =
+    project.images && project.images.length > 0
+      ? [project.thumbnail, ...project.images.map(i => i.imageUrl)]
+      : [project.thumbnail]
 
-export default function ProjectCard({ project, index = 0 }) {
-  const status = STATUSES[index % STATUSES.length]
-  const promo = PROMOS[index % PROMOS.length]
-  const isOpen = status === 'Đang mở bán'
+  const [idx, setIdx] = useState(0)
+  const highlightInfo = project.highlightInfo || ''
+
+  const prev = (e) => {
+    e.preventDefault()
+    setIdx(i => (i - 1 + images.length) % images.length)
+  }
+  const next = (e) => {
+    e.preventDefault()
+    setIdx(i => (i + 1) % images.length)
+  }
 
   return (
     <div className="group overflow-hidden rounded-xl bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       {/* Image */}
       <div className="relative h-52 overflow-hidden">
         <img
-          src={project.thumbnail}
+          src={images[idx]}
           alt={project.name}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
 
-        {/* Prev/Next arrows (decorative, real gallery needs images array) */}
-        <button className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-1 text-white opacity-0 transition group-hover:opacity-100 hover:bg-black/70">
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <button className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-1 text-white opacity-0 transition group-hover:opacity-100 hover:bg-black/70">
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
+        {/* Prev / Next arrows */}
+        {images.length > 1 && (
+          <>
+            <button
+              onClick={prev}
+              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-1 text-white opacity-0 transition group-hover:opacity-100 hover:bg-black/70"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={next}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-1 text-white opacity-0 transition group-hover:opacity-100 hover:bg-black/70"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </>
+        )}
 
-        {/* Status Badge */}
-        <span
-          className={`absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-semibold text-white shadow ${
-            isOpen ? 'bg-green-500' : 'bg-yellow-500'
-          }`}
-        >
-          {status}
-        </span>
+        {highlightInfo && (
+          <span className="absolute left-3 top-3 rounded-full bg-red-600 px-3 py-1 text-xs font-semibold text-white shadow">
+            {highlightInfo}
+          </span>
+        )}
 
-        {/* Promo Badge */}
-        <span className="absolute right-3 top-3 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white shadow">
-          {promo}
-        </span>
+        {/* Image dots */}
+        {images.length > 1 && (
+          <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1">
+            {images.map((_, i) => (
+              <span key={i} className={`h-1.5 w-1.5 rounded-full ${i === idx ? 'bg-white' : 'bg-white/50'}`} />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Info */}

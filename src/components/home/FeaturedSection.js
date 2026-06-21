@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { LISTING_TYPES } from '@/lib/listings'
 
 const cards = [
-  { label: 'Mua nhà', description: 'Dự án căn hộ, nhà phố, biệt thự phù hợp nhu cầu đầu tư.', href: '/bat-dong-san' },
-  { label: 'Thuê nhà', description: 'Bất động sản cho thuê địa điểm trung tâm, tiện nghi đầy đủ.', href: '/bat-dong-san' },
+  { label: 'Mua nhà', description: 'Dự án căn hộ, nhà phố, biệt thự phù hợp nhu cầu đầu tư.', href: LISTING_TYPES.sale.path },
+  { label: 'Thuê nhà', description: 'Bất động sản cho thuê địa điểm trung tâm, tiện nghi đầy đủ.', href: LISTING_TYPES.rent.path },
   { label: 'Dự án', description: 'Dự án mới, pháp lý rõ ràng và tiến độ minh bạch.', href: '/du-an' }
 ]
 

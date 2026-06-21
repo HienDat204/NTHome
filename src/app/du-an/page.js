@@ -1,11 +1,15 @@
 import Link from "next/link";
 import prisma from "@/lib/prisma";
+import ProjectCard from "@/components/cards/ProjectCard";
 
 export const dynamic = "force-dynamic";
 
 async function getProjects() {
   try {
-    return await prisma.project.findMany({ orderBy: { id: "desc" } });
+    return await prisma.project.findMany({
+      orderBy: { id: "desc" },
+      include: { images: { orderBy: { id: 'asc' } } }
+    });
   } catch (error) {
     console.error("ProjectsPage DB fallback:", error);
     return [];
@@ -29,30 +33,7 @@ export default async function ProjectsPage() {
       </div>
       <div className="grid gap-6 lg:grid-cols-3">
         {projects.map((project) => (
-          <Link
-            key={project.id}
-            href={`/du-an/${project.slug}`}
-            className="group overflow-hidden rounded-[2rem] bg-white shadow-lg shadow-slate-200/60 transition hover:-translate-y-1 hover:shadow-2xl"
-          >
-            <div
-              className="h-64 bg-cover bg-center"
-              style={{ backgroundImage: `url(${project.thumbnail})` }}
-            />
-            <div className="p-6">
-              <h2 className="text-2xl font-semibold text-slate-900">
-                {project.name}
-              </h2>
-              <p className="mt-3 text-sm text-slate-600 line-clamp-3">
-                {project.description}
-              </p>
-              <div className="mt-5 text-sm text-slate-500">
-                Nhà đầu tư: {project.investor}
-              </div>
-              <div className="mt-2 text-sm text-slate-500">
-                Địa chỉ: {project.address}
-              </div>
-            </div>
-          </Link>
+          <ProjectCard key={project.id} project={project} />
         ))}
       </div>
     </section>

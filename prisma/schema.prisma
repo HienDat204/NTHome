@@ -28,6 +28,8 @@ model Property {
   city        String
   district    String
   propertyType String
+  listingType String          @default("sale")
+  promoBadge  String          @default("")
   thumbnail   String
   featured    Boolean         @default(false)
   createdAt   DateTime        @default(now())
@@ -41,14 +43,23 @@ model PropertyImage {
   imageUrl   String
 }
 
+model ProjectImage {
+  id         Int      @id @default(autoincrement())
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId  Int
+  imageUrl   String
+}
+
 model Project {
-  id          Int      @id @default(autoincrement())
+  id          Int            @id @default(autoincrement())
   name        String
-  slug        String   @unique
+  slug        String         @unique
   investor    String
   address     String
   description String
+  highlightInfo String       @default("")
   thumbnail   String
+  images      ProjectImage[]
 }
 
 model Article {

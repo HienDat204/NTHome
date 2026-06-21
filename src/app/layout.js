@@ -1,14 +1,14 @@
 import './globals.css'
-import { Poppins } from 'next/font/google'
+import { Roboto } from 'next/font/google'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import FloatingButtons from '@/components/layout/FloatingButtons'
 
-const poppins = Poppins({
+const roboto = Roboto({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
-  weight: ['400', '500', '600', '700']
+  weight: ['400', '500', '700']
 })
 
 export const metadata = {
@@ -20,7 +20,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="vi" className="scroll-smooth">
-      <body className={`${poppins.className} bg-slate-50 text-slate-900`}>
+      <body className={`${roboto.className} bg-slate-50 text-slate-900`}>
         <Navbar />
         <main>{children}</main>
         <Footer />

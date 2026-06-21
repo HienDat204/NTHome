@@ -22,8 +22,25 @@ export default function AdminPropertiesPage() {
 
   const removeProperty = async (id) => {
     if (!confirm('Bạn có chắc muốn xóa bất động sản này?')) return
-    await axios.delete(`/api/properties/${id}`)
-    setProperties(properties.filter((item) => item.id !== id))
+
+    try {
+      const response = await axios.delete(`/api/properties/${id}`)
+
+      // Chỉ xóa khỏi state nếu API call thành công
+      if (response.status === 204 || response.status === 200) {
+        setProperties(properties.filter((item) => item.id !== id))
+        alert('✅ Đã xóa thành công!')
+      }
+    } catch (error) {
+      console.error('Failed to delete property:', error)
+
+      // Hiển thị lỗi cụ thể cho user
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        alert('❌ Lỗi: Bạn chưa đăng nhập hoặc không có quyền xóa!')
+      } else {
+        alert('❌ Lỗi khi xóa: ' + (error.response?.data?.error || error.message))
+      }
+    }
   }
 
   return (
@@ -41,6 +58,8 @@ export default function AdminPropertiesPage() {
             <tr>
               <th className="px-6 py-4">Tiêu đề</th>
               <th className="px-6 py-4">Thành phố</th>
+              <th className="px-6 py-4">Quận/Huyện</th>
+              <th className="px-6 py-4">Loại tin</th>
               <th className="px-6 py-4">Giá</th>
               <th className="px-6 py-4">Loại</th>
               <th className="px-6 py-4">Hành động</th>
@@ -48,13 +67,15 @@ export default function AdminPropertiesPage() {
           </thead>
           <tbody className="divide-y divide-slate-200 bg-white">
             {loading ? (
-              <tr><td colSpan="5" className="px-6 py-8 text-center text-slate-500">Đang tải...</td></tr>
+              <tr><td colSpan="7" className="px-6 py-8 text-center text-slate-500">Đang tải...</td></tr>
             ) : properties.length === 0 ? (
-              <tr><td colSpan="5" className="px-6 py-8 text-center text-slate-500">Không có dữ liệu.</td></tr>
+              <tr><td colSpan="7" className="px-6 py-8 text-center text-slate-500">Không có dữ liệu.</td></tr>
             ) : properties.map((property) => (
               <tr key={property.id}>
                 <td className="px-6 py-4 font-semibold text-slate-900">{property.title}</td>
                 <td className="px-6 py-4 text-slate-600">{property.city}</td>
+                <td className="px-6 py-4 text-slate-600">{property.district}</td>
+                <td className="px-6 py-4 text-slate-600">{property.listingType === 'rent' ? 'Cho thuê' : 'Bán nhà'}</td>
                 <td className="px-6 py-4 text-slate-600">{property.price.toLocaleString()}</td>
                 <td className="px-6 py-4 text-slate-600">{property.propertyType}</td>
                 <td className="px-6 py-4 space-x-3">

@@ -68,8 +68,8 @@ export async function DELETE(request, { params }) {
     }
 
     const prisma = await getPrisma();
-    await prisma.article.delete({ where: { id } });
-    return NextResponse.json(null, { status: 204 });
+      await prisma.article.delete({ where: { id } });
+      return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error("DELETE /api/articles/[id] error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

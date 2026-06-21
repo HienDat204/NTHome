@@ -1,21 +1,45 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { LISTING_MENU_ITEMS } from "@/lib/listings";
 
 const navLinks = [
-  { href: '/', label: 'Trang chủ' },
-  { href: '/bat-dong-san', label: 'Bất động sản' },
-  { href: '/du-an', label: 'Dự án' },
-  { href: '/tin-tuc', label: 'Tin tức' },
-  { href: '/lien-he', label: 'Liên hệ' },
-]
+  { href: "/", label: "Trang chủ" },
+  { href: "/du-an", label: "Dự án" },
+  { href: "/tin-tuc", label: "Tin tức" },
+  { href: "/lien-he", label: "Liên hệ" },
+];
 
 export default function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [searchOpen, setSearchOpen] = useState(false)
-  const path = usePathname()
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [desktopListingOpen, setDesktopListingOpen] = useState(false);
+  const [mobileListingOpen, setMobileListingOpen] = useState(false);
+  const [searchForm, setSearchForm] = useState({
+    q: "",
+    city: "",
+    district: "",
+  });
+  const router = useRouter();
+  const path = usePathname();
+  const isListingActive = path.startsWith("/bat-dong-san");
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+
+    const params = new URLSearchParams();
+    if (searchForm.q) params.set("q", searchForm.q);
+    if (searchForm.city) params.set("city", searchForm.city);
+    if (searchForm.district) params.set("district", searchForm.district);
+
+    router.push(
+      `/bat-dong-san${params.toString() ? `?${params.toString()}` : ""}`,
+    );
+    setSearchOpen(false);
+    setMenuOpen(false);
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-secondary shadow-lg">
@@ -28,19 +52,90 @@ export default function Navbar() {
 
         {/* Desktop Nav */}
         <nav className="hidden items-center gap-1 md:flex">
-          {navLinks.map(link => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
-                path === link.href
-                  ? 'bg-primary text-white'
-                  : 'text-slate-300 hover:bg-white/10 hover:text-white'
+          {navLinks
+            .filter((link) => link.href === "/")
+            .map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                  path === link.href
+                    ? "bg-primary text-white"
+                    : "text-slate-300 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          <div
+            className="relative"
+            onMouseEnter={() => setDesktopListingOpen(true)}
+            onMouseLeave={() => setDesktopListingOpen(false)}
+          >
+            <button
+              type="button"
+              onClick={() => setDesktopListingOpen((open) => !open)}
+              className={`flex items-center gap-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                isListingActive
+                  ? "bg-primary text-white"
+                  : "text-slate-300 hover:bg-white/10 hover:text-white"
               }`}
             >
-              {link.label}
-            </Link>
-          ))}
+              Bất động sản
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+
+            {desktopListingOpen && (
+              <div className="absolute left-0 top-full z-50 w-64 pt-2">
+                <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur">
+                  {LISTING_MENU_ITEMS.map((item) => (
+                    <Link
+                      key={item.path}
+                      href={item.path}
+                      onClick={() => setDesktopListingOpen(false)}
+                      className={`block rounded-xl px-4 py-3 text-sm font-medium transition ${
+                        path === item.path
+                          ? "bg-primary text-white"
+                          : "text-slate-200 hover:bg-white/10 hover:text-white"
+                      }`}
+                    >
+                      <div className="font-semibold">{item.label}</div>
+                      <div className="mt-1 text-xs text-slate-400">
+                        {item.description}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          {navLinks
+            .filter((link) => link.href !== "/")
+            .map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                  path === link.href
+                    ? "bg-primary text-white"
+                    : "text-slate-300 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
         </nav>
 
         {/* Right: Hotline + Search + Hamburger */}
@@ -52,7 +147,7 @@ export default function Navbar() {
             <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
               <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
             </svg>
-            0909 999 999
+            0935 278 703
           </a>
 
           <button
@@ -60,8 +155,18 @@ export default function Navbar() {
             className="rounded-md p-2 text-slate-300 hover:bg-white/10 hover:text-white"
             aria-label="Tìm kiếm"
           >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
             </svg>
           </button>
 
@@ -71,12 +176,32 @@ export default function Navbar() {
             aria-label="Menu"
           >
             {menuOpen ? (
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             ) : (
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             )}
           </button>
@@ -86,34 +211,119 @@ export default function Navbar() {
       {/* Search Dropdown */}
       {searchOpen && (
         <div className="border-t border-white/10 bg-secondary px-4 py-3">
-          <div className="container mx-auto flex gap-2">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="container mx-auto grid gap-2 md:grid-cols-[1.4fr_1fr_1fr_auto]"
+          >
             <input
               type="text"
-              placeholder="Tìm kiếm bất động sản, dự án..."
+              value={searchForm.q}
+              onChange={(event) =>
+                setSearchForm((prev) => ({ ...prev, q: event.target.value }))
+              }
+              placeholder="Tìm theo tên, địa chỉ, dự án..."
               className="flex-1 rounded-lg bg-white/10 px-4 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+            <input
+              type="text"
+              value={searchForm.city}
+              onChange={(event) =>
+                setSearchForm((prev) => ({ ...prev, city: event.target.value }))
+              }
+              placeholder="Thành phố"
+              className="rounded-lg bg-white/10 px-4 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+            <input
+              type="text"
+              value={searchForm.district}
+              onChange={(event) =>
+                setSearchForm((prev) => ({
+                  ...prev,
+                  district: event.target.value,
+                }))
+              }
+              placeholder="Quận / huyện"
+              className="rounded-lg bg-white/10 px-4 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <button className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-white hover:bg-red-700">
               Tìm kiếm
             </button>
-          </div>
+          </form>
         </div>
       )}
 
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="border-t border-white/10 bg-secondary px-4 pb-4 pt-2 md:hidden">
-          {navLinks.map(link => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              className={`block rounded-md px-3 py-2 text-sm font-medium ${
-                path === link.href ? 'bg-primary text-white' : 'text-slate-300 hover:text-white'
-              }`}
+          {navLinks
+            .filter((link) => link.href === "/")
+            .map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className={`mb-2 block rounded-md px-3 py-2 text-sm font-medium ${
+                  path === link.href
+                    ? "bg-primary text-white"
+                    : "text-slate-300 hover:text-white"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          <button
+            type="button"
+            onClick={() => setMobileListingOpen((open) => !open)}
+            className={`mb-2 flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium ${isListingActive ? "bg-primary text-white" : "text-slate-300 hover:text-white"}`}
+          >
+            <span>Bất động sản</span>
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              {link.label}
-            </Link>
-          ))}
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+          {mobileListingOpen && (
+            <div className="mb-3 space-y-2 pl-3">
+              {LISTING_MENU_ITEMS.map((item) => (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setMobileListingOpen(false);
+                  }}
+                  className={`block rounded-md px-3 py-2 text-sm font-medium ${path === item.path ? "bg-primary text-white" : "text-slate-300 hover:text-white"}`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          )}
+          {navLinks
+            .filter((link) => link.href !== "/")
+            .map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className={`block rounded-md px-3 py-2 text-sm font-medium ${
+                  path === link.href
+                    ? "bg-primary text-white"
+                    : "text-slate-300 hover:text-white"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
           <a
             href="tel:0909999999"
             className="mt-3 flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white"
@@ -121,11 +331,10 @@ export default function Navbar() {
             <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
               <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
             </svg>
-            0909 999 999
+            0935 278 703
           </a>
         </div>
       )}
     </header>
-  )
+  );
 }
-

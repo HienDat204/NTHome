@@ -1,10 +1,14 @@
 import prisma from "@/lib/prisma";
+import PropertyGallery from "@/components/properties/PropertyGallery";
 
 export const dynamic = "force-dynamic";
 
 async function getProject(slug) {
   try {
-    return await prisma.project.findUnique({ where: { slug } });
+    return await prisma.project.findUnique({
+      where: { slug },
+      include: { images: { orderBy: { id: 'asc' } } }
+    });
   } catch (error) {
     console.error("ProjectDetailPage DB fallback:", error);
     return null;
@@ -22,17 +26,20 @@ export default async function ProjectDetailPage({ params }) {
     <section className="container mx-auto px-6 py-12">
       <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr]">
         <div className="space-y-8">
-          <div className="overflow-hidden rounded-[2rem] bg-slate-900">
-            <img
-              src={project.thumbnail}
-              alt={project.name}
-              className="h-full w-full object-cover"
-            />
-          </div>
+          <PropertyGallery
+            thumbnail={project.thumbnail}
+            images={project.images || []}
+            title={project.name}
+          />
           <div className="rounded-[2rem] bg-white p-8 shadow-lg shadow-slate-200/60">
             <h1 className="text-4xl font-semibold text-slate-900">
               {project.name}
             </h1>
+            {project.highlightInfo ? (
+              <p className="mt-4 inline-flex rounded-full bg-red-50 px-4 py-2 text-sm font-semibold text-red-600">
+                {project.highlightInfo}
+              </p>
+            ) : null}
             <p className="mt-4 text-slate-600">
               Nhà đầu tư: {project.investor}
             </p>

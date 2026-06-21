@@ -1,0 +1,1 @@
+ALTER TABLE "Property" ADD COLUMN "promoBadge" TEXT NOT NULL DEFAULT '';

@@ -20,6 +20,7 @@ const seedData = {
     {
       title: "Căn hộ cao cấp 2PN tại Landmark 81",
       slug: "can-ho-cao-cap-2pn-landmark-81",
+      listingType: "sale",
       description:
         "Căn hộ cao cấp 2 phòng ngủ với view Bitexco tuyệt đẹp, nội thất đầy đủ, tiện ích đỉnh cao.",
       price: 3500000000,
@@ -36,6 +37,7 @@ const seedData = {
     {
       title: "Nhà phố vị trí đẹp quận 3",
       slug: "nha-pho-vi-tri-dep-quan-3",
+      listingType: "sale",
       description:
         "Nhà phố 5 tầng, 3 phòng ngủ, mặt tiền 6m, kế bên trường tiểu học nổi tiếng, vị trí kinh doanh.",
       price: 8500000000,
@@ -52,6 +54,7 @@ const seedData = {
     {
       title: "Biệt thự view sông Tây Hồ",
       slug: "biet-thu-view-song-tay-ho",
+      listingType: "sale",
       description:
         "Biệt thự 4 tầng view sông Tây Hồ, 4 phòng ngủ, sân vườn rộng, thích hợp ở và kinh doanh.",
       price: 15000000000,
@@ -68,8 +71,9 @@ const seedData = {
     {
       title: "Căn hộ chung cư Goldmark City",
       slug: "can-ho-chung-cu-goldmark-city",
+      listingType: "rent",
       description:
-        "Căn hộ 3PN tại Goldmark City, nội thất sang trọng, view Hồ Tây đẹp mê mẩn.",
+        "Căn hộ 3PN cho thuê tại Goldmark City, nội thất sang trọng, view Hồ Tây đẹp mê mẩn.",
       price: 2800000000,
       area: 95,
       bedrooms: 3,
@@ -82,10 +86,11 @@ const seedData = {
       featured: false,
     },
     {
-      title: "Đất nền khu đô thị Vạn Phúc",
-      slug: "dat-nen-khu-do-thi-van-phuc",
+      title: "Căn hộ dịch vụ cho thuê Vạn Phúc",
+      slug: "can-ho-dich-vu-cho-thue-van-phuc",
+      listingType: "rent",
       description:
-        "Lô đất nền 100m2 tại dự án Vạn Phúc, tiểu khu Westlake, pháp lý rõ ràng, sổ đỏ trao tay.",
+        "Căn hộ dịch vụ 100m2 tại khu đô thị Vạn Phúc, tiểu khu Westlake, đầy đủ nội thất, vào ở ngay.",
       price: 3200000000,
       area: 100,
       bedrooms: 0,
@@ -93,13 +98,14 @@ const seedData = {
       address: "Khu đô thị Vạn Phúc",
       city: "Hà Nội",
       district: "Hà Đông",
-      propertyType: "Đất nền",
+      propertyType: "Căn hộ",
       thumbnail: "",
       featured: false,
     },
     {
-      title: "Căn shop Vincom Bà Triệu",
-      slug: "can-shop-vincom-ba-trieu",
+      title: "Shop mặt phố Vincom Bà Triệu",
+      slug: "shop-mat-pho-vincom-ba-trieu",
+      listingType: "sale",
       description:
         "Cửa hàng kinh doanh tại Vincom Bà Triệu, vị trí vàng, khách hàng đông.",
       price: 5000000000,
@@ -112,6 +118,23 @@ const seedData = {
       propertyType: "Shop",
       thumbnail: "",
       featured: false,
+    },
+    {
+      title: "Căn hộ 2PN cho thuê tại Vinhomes Ocean Park",
+      slug: "can-ho-2pn-cho-thue-vinhomes-ocean-park",
+      listingType: "rent",
+      description:
+        "Căn hộ 2 phòng ngủ full nội thất, gần hồ, tiện ích đồng bộ, phù hợp gia đình trẻ.",
+      price: 12000000,
+      area: 67,
+      bedrooms: 2,
+      bathrooms: 2,
+      address: "Khu đô thị Vinhomes Ocean Park",
+      city: "Hà Nội",
+      district: "Gia Lâm",
+      propertyType: "Căn hộ",
+      thumbnail: "",
+      featured: true,
     },
   ],
   projects: [
@@ -166,10 +189,10 @@ const seedData = {
   setting: {
     siteName: "Next Estate",
     logo: "/logo.png",
-    hotline: "0909 999 999",
+    hotline: "0935 278 703",
     email: "info@nextestate.vn",
     facebook: "https://facebook.com/nextestate",
-    zalo: "0909999999",
+    zalo: "0935278703",
     address: "Hà Nội, Việt Nam",
   },
 };
@@ -178,70 +201,47 @@ async function main() {
   console.log("🌱 Seeding database...");
 
   try {
-    // Check and create admin
-    const existingAdmin = await prisma.admin.findFirst();
-    if (!existingAdmin) {
-      const hashedPassword = await bcrypt.hash(seedData.admin.password, 10);
-      await prisma.admin.create({
-        data: { ...seedData.admin, password: hashedPassword },
+    const hashedPassword = await bcrypt.hash(seedData.admin.password, 10);
+    await prisma.admin.upsert({
+      where: { username: seedData.admin.username },
+      update: { ...seedData.admin, password: hashedPassword },
+      create: { ...seedData.admin, password: hashedPassword },
+    });
+    console.log("✓ Admin account synced");
+
+    for (const property of seedData.properties) {
+      await prisma.property.upsert({
+        where: { slug: property.slug },
+        update: {},
+        create: property,
       });
-      console.log("✓ Admin account created");
-    } else {
-      console.log("⏭  Admin already exists, skipping.");
     }
+    console.log(`✓ ${seedData.properties.length} properties synced`);
 
-    // Check and create properties
-    const existingProps = await prisma.property.count();
-    if (existingProps < seedData.properties.length) {
-      // Get existing slugs to avoid duplicates
-      const existing = await prisma.property.findMany({
-        select: { slug: true },
+    for (const project of seedData.projects) {
+      await prisma.project.upsert({
+        where: { slug: project.slug },
+        update: {},
+        create: project,
       });
-      const existingSlugs = new Set(existing.map((p) => p.slug));
-      let added = 0;
-      for (const property of seedData.properties) {
-        if (!existingSlugs.has(property.slug)) {
-          await prisma.property.create({ data: property });
-          added++;
-        }
-      }
-      console.log(
-        `✓ ${added} properties added (total: ${existingProps + added})`,
-      );
-    } else {
-      console.log(`⏭  ${existingProps} properties already exist, skipping.`);
     }
+    console.log(`✓ ${seedData.projects.length} projects synced`);
 
-    // Check and create projects
-    const existingProjects = await prisma.project.count();
-    if (existingProjects === 0) {
-      for (const project of seedData.projects) {
-        await prisma.project.create({ data: project });
-      }
-      console.log(`✓ ${seedData.projects.length} projects created`);
-    } else {
-      console.log(`⏭  ${existingProjects} projects already exist, skipping.`);
+    for (const article of seedData.articles) {
+      await prisma.article.upsert({
+        where: { slug: article.slug },
+        update: {},
+        create: article,
+      });
     }
+    console.log(`✓ ${seedData.articles.length} articles synced`);
 
-    // Check and create articles
-    const existingArticles = await prisma.article.count();
-    if (existingArticles === 0) {
-      for (const article of seedData.articles) {
-        await prisma.article.create({ data: article });
-      }
-      console.log(`✓ ${seedData.articles.length} articles created`);
-    } else {
-      console.log(`⏭  ${existingArticles} articles already exist, skipping.`);
-    }
-
-    // Check and create settings
-    const existingSettings = await prisma.setting.count();
-    if (existingSettings === 0) {
-      await prisma.setting.create({ data: seedData.setting });
-      console.log("✓ Settings created");
-    } else {
-      console.log("⏭  Settings already exist, skipping.");
-    }
+    await prisma.setting.upsert({
+      where: { id: 1 },
+      update: {},
+      create: seedData.setting,
+    });
+    console.log("✓ Settings synced");
 
     console.log("✅ Database seeded successfully!");
   } catch (error) {

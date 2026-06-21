@@ -10,13 +10,14 @@ function formatPrice(price) {
   return n.toLocaleString('vi-VN') + ' đ'
 }
 
-export default function PropertyCard({ property, badge = 'Đang bán', promoBadge = '' }) {
+export default function PropertyCard({ property, promoBadge = '' }) {
   const images =
     property.images && property.images.length > 0
-      ? property.images.map(i => i.imageUrl)
+      ? [property.thumbnail, ...property.images.map(i => i.imageUrl)]
       : [property.thumbnail]
 
   const [idx, setIdx] = useState(0)
+  const resolvedPromoBadge = promoBadge || property.promoBadge || ''
 
   const prev = (e) => {
     e.preventDefault()
@@ -59,15 +60,10 @@ export default function PropertyCard({ property, badge = 'Đang bán', promoBadg
           </>
         )}
 
-        {/* Status Badge */}
-        <span className="absolute left-3 top-3 rounded-full bg-green-500 px-3 py-1 text-xs font-semibold text-white shadow">
-          {badge}
-        </span>
-
         {/* Promo Badge */}
-        {promoBadge && (
+        {resolvedPromoBadge && (
           <span className="absolute right-3 top-3 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-white shadow">
-            {promoBadge}
+            {resolvedPromoBadge}
           </span>
         )}
 

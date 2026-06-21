@@ -4,7 +4,10 @@ import { requireAdminWriteAccess } from '@/lib/admin-api-guard'
 
 export async function GET() {
   try {
-    const projects = await prisma.project.findMany({ orderBy: { id: 'desc' } })
+    const projects = await prisma.project.findMany({
+      orderBy: { id: 'desc' },
+      include: { images: { orderBy: { id: 'asc' } } }
+    })
     return NextResponse.json(projects)
   } catch (error) {
     console.error('GET /api/projects error:', error)

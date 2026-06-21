@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import PropertyCard from '@/components/cards/PropertyCard'
+import { filterProperties, LISTING_TYPES } from '@/lib/listings'
 
 export default function BanNhaSection({ properties }) {
-  const PROMOS = ['Mặt tiền rộng', 'Pháp lý rõ ràng', 'Sổ đỏ trao tay', 'View đẹp', 'Nội thất cao cấp', 'Vị trí đắc địa']
+  const saleProperties = filterProperties(properties, { listingType: LISTING_TYPES.sale.value })
 
   return (
     <section className="bg-white py-16">
@@ -17,7 +18,7 @@ export default function BanNhaSection({ properties }) {
             </p>
           </div>
           <Link
-            href="/bat-dong-san"
+            href={LISTING_TYPES.sale.path}
             className="flex items-center gap-2 rounded-lg border-2 border-primary px-5 py-2 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white"
           >
             Xem tất cả
@@ -28,18 +29,16 @@ export default function BanNhaSection({ properties }) {
         </div>
 
         {/* Grid */}
-        {properties.length === 0 ? (
+        {saleProperties.length === 0 ? (
           <div className="rounded-xl bg-slate-50 p-12 text-center text-slate-400">
             Chưa có bất động sản nào.
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {properties.slice(0, 8).map((property, i) => (
+            {saleProperties.slice(0, 8).map((property) => (
               <PropertyCard
                 key={property.id}
                 property={property}
-                badge="Đang bán"
-                promoBadge={PROMOS[i % PROMOS.length]}
               />
             ))}
           </div>
