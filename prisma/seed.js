@@ -209,23 +209,28 @@ async function main() {
     });
     console.log("✓ Admin account synced");
 
-    for (const property of seedData.properties) {
-      await prisma.property.upsert({
-        where: { slug: property.slug },
-        update: {},
-        create: property,
-      });
-    }
-    console.log(`✓ ${seedData.properties.length} properties synced`);
+    // Properties và Projects chỉ seed lần đầu (nếu database trống)
+    // Không seed lại nếu đã có data → Tránh tạo lại data đã xóa
+    const existingPropertiesCount = await prisma.property.count();
+    const existingProjectsCount = await prisma.project.count();
 
-    for (const project of seedData.projects) {
-      await prisma.project.upsert({
-        where: { slug: project.slug },
-        update: {},
-        create: project,
-      });
+    if (existingPropertiesCount === 0) {
+      for (const property of seedData.properties) {
+        await prisma.property.create({ data: property });
+      }
+      console.log(`✓ ${seedData.properties.length} properties seeded`);
+    } else {
+      console.log(`⚠️  Skipped properties seed (${existingPropertiesCount} properties already exist)`);
     }
-    console.log(`✓ ${seedData.projects.length} projects synced`);
+
+    if (existingProjectsCount === 0) {
+      for (const project of seedData.projects) {
+        await prisma.project.create({ data: project });
+      }
+      console.log(`✓ ${seedData.projects.length} projects seeded`);
+    } else {
+      console.log(`⚠️  Skipped projects seed (${existingProjectsCount} projects already exist)`);
+    }
 
     for (const article of seedData.articles) {
       await prisma.article.upsert({
