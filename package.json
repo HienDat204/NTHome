@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "node scripts/stop-node-locks.js && node scripts/clean-next.js && node scripts/with-default-db-url.js prisma migrate deploy && next build",
+    "build:railway": "node scripts/with-default-db-url.js prisma migrate deploy && next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "node scripts/with-default-db-url.js prisma generate",
