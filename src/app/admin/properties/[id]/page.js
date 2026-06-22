@@ -116,7 +116,7 @@ export default function EditPropertyPage({ params }) {
       const { images, createdAt, ...payload } = formData
       await axios.put(`/api/properties/${id}`, {
         ...payload,
-        price: parseInt(payload.price),
+        price: payload.price.toString(),
         area: parseInt(payload.area),
         bedrooms: parseInt(payload.bedrooms) || 0,
         bathrooms: parseInt(payload.bathrooms) || 0

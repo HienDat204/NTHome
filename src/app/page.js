@@ -31,11 +31,7 @@ export default async function HomePage() {
     console.error("HomePage DB fallback:", error);
   }
 
-  // Serialize BigInt price to string for client components
-  const properties = propertiesRaw.map((p) => ({
-    ...p,
-    price: p.price.toString(),
-  }));
+  const properties = propertiesRaw;
 
   const saleProperties = properties.filter(
     (property) => (property.listingType || LISTING_TYPES.sale.value) === LISTING_TYPES.sale.value,

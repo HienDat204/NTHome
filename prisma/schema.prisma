@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -20,7 +21,7 @@ model Property {
   title       String
   slug        String          @unique
   description String
-  price       BigInt
+  price       String
   area        Int
   bedrooms    Int
   bathrooms   Int

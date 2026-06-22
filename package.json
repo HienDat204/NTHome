@@ -17,21 +17,26 @@
     "build:with-seed": "node scripts/stop-node-locks.js && node scripts/clean-next.js && node scripts/with-default-db-url.js prisma migrate deploy && npm run prisma:seed && next build"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.4",
+    "@prisma/adapter-libsql": "^7.8.0",
     "@prisma/client": "5.22.0",
     "@tailwindcss/typography": "^0.5.9",
     "axios": "^1.4.0",
     "bcryptjs": "^2.4.3",
     "clsx": "^2.0.0",
+    "dotenv": "^17.4.2",
     "framer-motion": "^10.16.0",
     "next": "14.0.3",
     "next-auth": "^4.24.0",
+    "prisma": "5.22.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.47.0",
     "react-icons": "^4.12.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^6.0.1",
     "swiper": "^10.0.0",
-    "zod": "^3.22.0",
-    "prisma": "5.22.0"
+    "zod": "^3.22.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",

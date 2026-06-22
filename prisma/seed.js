@@ -23,7 +23,7 @@ const seedData = {
       listingType: "sale",
       description:
         "Căn hộ cao cấp 2 phòng ngủ với view Bitexco tuyệt đẹp, nội thất đầy đủ, tiện ích đỉnh cao.",
-      price: 3500000000,
+      price: "3500000000",
       area: 85,
       bedrooms: 2,
       bathrooms: 2,
@@ -40,7 +40,7 @@ const seedData = {
       listingType: "sale",
       description:
         "Nhà phố 5 tầng, 3 phòng ngủ, mặt tiền 6m, kế bên trường tiểu học nổi tiếng, vị trí kinh doanh.",
-      price: 8500000000,
+      price: "8500000000",
       area: 120,
       bedrooms: 3,
       bathrooms: 3,
@@ -57,7 +57,7 @@ const seedData = {
       listingType: "sale",
       description:
         "Biệt thự 4 tầng view sông Tây Hồ, 4 phòng ngủ, sân vườn rộng, thích hợp ở và kinh doanh.",
-      price: 15000000000,
+      price: "15000000000",
       area: 200,
       bedrooms: 4,
       bathrooms: 4,
@@ -74,7 +74,7 @@ const seedData = {
       listingType: "rent",
       description:
         "Căn hộ 3PN cho thuê tại Goldmark City, nội thất sang trọng, view Hồ Tây đẹp mê mẩn.",
-      price: 2800000000,
+      price: "2800000000",
       area: 95,
       bedrooms: 3,
       bathrooms: 2,
@@ -91,7 +91,7 @@ const seedData = {
       listingType: "rent",
       description:
         "Căn hộ dịch vụ 100m2 tại khu đô thị Vạn Phúc, tiểu khu Westlake, đầy đủ nội thất, vào ở ngay.",
-      price: 3200000000,
+      price: "3200000000",
       area: 100,
       bedrooms: 0,
       bathrooms: 0,
@@ -108,7 +108,7 @@ const seedData = {
       listingType: "sale",
       description:
         "Cửa hàng kinh doanh tại Vincom Bà Triệu, vị trí vàng, khách hàng đông.",
-      price: 5000000000,
+      price: "5000000000",
       area: 50,
       bedrooms: 0,
       bathrooms: 1,
@@ -125,7 +125,7 @@ const seedData = {
       listingType: "rent",
       description:
         "Căn hộ 2 phòng ngủ full nội thất, gần hồ, tiện ích đồng bộ, phù hợp gia đình trẻ.",
-      price: 12000000,
+      price: "12000000",
       area: 67,
       bedrooms: 2,
       bathrooms: 2,
@@ -220,7 +220,9 @@ async function main() {
       }
       console.log(`✓ ${seedData.properties.length} properties seeded`);
     } else {
-      console.log(`⚠️  Skipped properties seed (${existingPropertiesCount} properties already exist)`);
+      console.log(
+        `⚠️  Skipped properties seed (${existingPropertiesCount} properties already exist)`,
+      );
     }
 
     if (existingProjectsCount === 0) {
@@ -229,7 +231,9 @@ async function main() {
       }
       console.log(`✓ ${seedData.projects.length} projects seeded`);
     } else {
-      console.log(`⚠️  Skipped projects seed (${existingProjectsCount} projects already exist)`);
+      console.log(
+        `⚠️  Skipped projects seed (${existingProjectsCount} projects already exist)`,
+      );
     }
 
     for (const article of seedData.articles) {

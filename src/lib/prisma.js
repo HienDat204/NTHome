@@ -1,4 +1,6 @@
 import { createRequire } from "module";
+import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { createClient } from "@libsql/client";
 
 const globalForPrisma = globalThis;
 const require = createRequire(import.meta.url);
@@ -16,15 +18,35 @@ function getPrismaClientCtor() {
 
 function getPrismaClient() {
   const PrismaClient = getPrismaClientCtor();
-  const databaseUrl =
-    process.env.DATABASE_URL || "file:../database/database.db";
-  const options = {
-    datasources: {
-      db: {
-        url: databaseUrl,
+  const databaseUrl = process.env.DATABASE_URL || "file:../database/database.db";
+
+  // Check if using Turso (libSQL)
+  const isTurso = databaseUrl.startsWith("libsql://");
+
+  let options;
+
+  if (isTurso) {
+    // Turso configuration with libSQL adapter
+    const libsql = createClient({
+      url: databaseUrl,
+      authToken: process.env.TURSO_AUTH_TOKEN,
+    });
+
+    const adapter = new PrismaLibSql(libsql);
+
+    options = {
+      adapter,
+    };
+  } else {
+    // Local SQLite configuration
+    options = {
+      datasources: {
+        db: {
+          url: databaseUrl,
+        },
       },
-    },
-  };
+    };
+  }
 
   if (process.env.NODE_ENV === "production") {
     if (!globalForPrisma.prisma) {

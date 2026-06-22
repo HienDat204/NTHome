@@ -9,7 +9,7 @@ export async function GET(request, { params }) {
       include: { images: { orderBy: { id: 'asc' } } }
     })
     if (!property) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-    return NextResponse.json({ ...property, price: property.price.toString() })
+    return NextResponse.json(property)
   } catch (error) {
     console.error('GET /api/properties/[id] error:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })
@@ -28,7 +28,7 @@ export async function PUT(request, { params }) {
       where: { id: parseInt(params.id) },
       data: updateData
     })
-    return NextResponse.json({ ...updated, price: updated.price.toString() })
+    return NextResponse.json(updated)
   } catch (error) {
     console.error('PUT /api/properties/[id] error:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })

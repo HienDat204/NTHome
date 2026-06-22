@@ -4,11 +4,10 @@ import { requireAdminWriteAccess } from '@/lib/admin-api-guard'
 
 export async function GET() {
   try {
-    const raw = await prisma.property.findMany({ 
+    const properties = await prisma.property.findMany({
       include: { images: { orderBy: { id: 'asc' } } },
-      orderBy: { createdAt: 'desc' } 
+      orderBy: { createdAt: 'desc' }
     })
-    const properties = raw.map(p => ({ ...p, price: p.price.toString() }))
     return NextResponse.json(properties)
   } catch (error) {
     console.error('GET /api/properties error:', error)
@@ -48,7 +47,7 @@ export async function POST(request) {
       include: { images: { orderBy: { id: 'asc' } } }
     })
 
-    return NextResponse.json({ ...newProperty, price: newProperty.price.toString() }, { status: 201 })
+    return NextResponse.json(newProperty, { status: 201 })
   } catch (error) {
     console.error('POST /api/properties error:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })

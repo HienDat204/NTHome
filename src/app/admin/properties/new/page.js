@@ -80,7 +80,7 @@ export default function NewPropertyPage() {
     try {
       await axios.post('/api/properties', {
         ...formData,
-        price: parseInt(formData.price),
+        price: formData.price.toString(),
         area: parseInt(formData.area),
         bedrooms: parseInt(formData.bedrooms) || 0,
         bathrooms: parseInt(formData.bathrooms) || 0,

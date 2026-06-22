@@ -1,1 +1,0 @@
-ALTER TABLE "Project" ADD COLUMN "highlightInfo" TEXT NOT NULL DEFAULT '';
