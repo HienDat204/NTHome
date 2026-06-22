@@ -1,23 +1,10 @@
-import { createRequire } from "module";
+import { PrismaClient } from "@prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 import { createClient } from "@libsql/client";
 
 const globalForPrisma = globalThis;
-const require = createRequire(import.meta.url);
-
-let PrismaClientCtor;
-
-function getPrismaClientCtor() {
-  if (!PrismaClientCtor) {
-    const { PrismaClient } = require("@prisma/client");
-    PrismaClientCtor = PrismaClient;
-  }
-
-  return PrismaClientCtor;
-}
 
 function getPrismaClient() {
-  const PrismaClient = getPrismaClientCtor();
   const databaseUrl = process.env.DATABASE_URL || "file:../database/database.db";
 
   // Check if using Turso (libSQL)
@@ -27,6 +14,11 @@ function getPrismaClient() {
 
   if (isTurso) {
     // Turso configuration with libSQL adapter
+    if (!process.env.TURSO_AUTH_TOKEN) {
+      console.error("TURSO_AUTH_TOKEN is not set");
+      throw new Error("TURSO_AUTH_TOKEN is required for Turso connection");
+    }
+
     const libsql = createClient({
       url: databaseUrl,
       authToken: process.env.TURSO_AUTH_TOKEN,
