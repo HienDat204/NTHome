@@ -8,13 +8,13 @@ import { isSaleListingType, isRentListingType } from "@/lib/listings";
 
 export const dynamic = "force-dynamic";
 
-// Helper: serialize property (convert BigInt price to Number)
+// Helper: serialize property (convert BigInt price to Number, keep images as objects)
 function serializeProperty(p) {
   return {
     ...p,
     price: Number(p.price),
     createdAt: p.createdAt.toISOString(),
-    images: p.images ? p.images.slice(0, 3).map(i => i.imageUrl) : [],
+    images: p.images ? p.images.map(i => ({ imageUrl: i.imageUrl })) : [],
   }
 }
 
@@ -31,13 +31,13 @@ export default async function HomePage() {
         where: { featured: true },
         take: 8,
         orderBy: { createdAt: "desc" },
-        include: { images: { orderBy: { id: "asc" }, take: 3 } },
+        include: { images: { orderBy: { id: "asc" } } },
       }),
       // Recent properties (for sale/rent sections)
       prisma.property.findMany({
         take: 8,
         orderBy: { createdAt: "desc" },
-        include: { images: { orderBy: { id: "asc" }, take: 3 } },
+        include: { images: { orderBy: { id: "asc" } } },
       }),
       prisma.article.findMany({ take: 6, orderBy: { createdAt: "desc" } }),
     ])

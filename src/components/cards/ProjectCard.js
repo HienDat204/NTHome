@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 
 export default function ProjectCard({ project }) {
   const images =
@@ -11,6 +10,7 @@ export default function ProjectCard({ project }) {
       : [project.thumbnail]
 
   const [idx, setIdx] = useState(0)
+  const [hovered, setHovered] = useState(false)
   const highlightInfo = project.highlightInfo || ''
 
   const prev = (e) => {
@@ -23,15 +23,18 @@ export default function ProjectCard({ project }) {
   }
 
   return (
-    <div className="group overflow-hidden rounded-xl bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <div className="overflow-hidden rounded-xl bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       {/* Image */}
-      <div className="relative h-52 overflow-hidden">
-        <Image
+      <div
+        className="relative h-52 overflow-hidden"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <img
           src={images[idx]}
           alt={project.name}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          className="h-full w-full object-cover transition-transform duration-500"
+          style={{ transform: hovered ? 'scale(1.05)' : 'scale(1)' }}
         />
 
         {/* Prev / Next arrows */}
@@ -39,7 +42,8 @@ export default function ProjectCard({ project }) {
           <>
             <button
               onClick={prev}
-              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-1 text-white opacity-0 transition group-hover:opacity-100 hover:bg-black/70"
+              style={{ opacity: hovered ? 1 : 0 }}
+              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-1 text-white transition hover:bg-black/70"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -47,7 +51,8 @@ export default function ProjectCard({ project }) {
             </button>
             <button
               onClick={next}
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-1 text-white opacity-0 transition group-hover:opacity-100 hover:bg-black/70"
+              style={{ opacity: hovered ? 1 : 0 }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-1 text-white transition hover:bg-black/70"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

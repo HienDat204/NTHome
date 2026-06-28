@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 async function getProperties() {
   try {
     return await prisma.property.findMany({
-      include: { images: { orderBy: { id: 'asc' }, take: 3 } },
+      include: { images: { orderBy: { id: 'asc' } } },
       orderBy: { createdAt: 'desc' },
     })
   } catch (error) {

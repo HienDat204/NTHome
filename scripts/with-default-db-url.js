@@ -1,6 +1,8 @@
 const { spawnSync } = require('child_process')
+const path = require('path')
 
-const fallbackUrl = 'file:../database/database.db'
+const dbFile = path.join(__dirname, '..', 'database', 'database.db').replace(/\\/g, '\\\\')
+const fallbackUrl = `file:${dbFile}`
 if (!process.env.DATABASE_URL) {
   process.env.DATABASE_URL = fallbackUrl
   console.log(`[build] DATABASE_URL is missing, using fallback: ${fallbackUrl}`)
