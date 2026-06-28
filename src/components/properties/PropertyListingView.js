@@ -120,7 +120,7 @@ export default function PropertyListingView({
       </div>
 
       <div className="mb-8 rounded-[2rem] bg-white p-5 shadow-lg shadow-slate-200/70">
-        <form method="get" className="grid gap-4 lg:grid-cols-[1.5fr_1fr_1fr_1fr_auto]">
+        <form method="get" className="grid gap-4 lg:grid-cols-[1.5fr_1fr_1fr_auto]">
           <input
             type="text"
             name="q"
@@ -140,13 +140,6 @@ export default function PropertyListingView({
             name="district"
             defaultValue={district}
             placeholder="Quận / huyện"
-            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-secondary focus:ring-2 focus:ring-secondary/20"
-          />
-          <input
-            type="text"
-            name="listingTypeFilter"
-            defaultValue={listingTypeFilter}
-            placeholder="Loại bất động sản"
             className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-secondary focus:ring-2 focus:ring-secondary/20"
           />
           <button
