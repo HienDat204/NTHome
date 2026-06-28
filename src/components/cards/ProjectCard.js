@@ -4,10 +4,11 @@ import { useState } from 'react'
 import Link from 'next/link'
 
 export default function ProjectCard({ project }) {
-  const images =
-    project.images && project.images.length > 0
-      ? [project.thumbnail, ...project.images.map(i => i.imageUrl)]
-      : [project.thumbnail]
+  const images = (() => {
+    if (!project.images || project.images.length === 0) return [project.thumbnail]
+    const imgUrls = project.images.map(i => i.imageUrl)
+    return imgUrls[0] === project.thumbnail ? imgUrls : [project.thumbnail, ...imgUrls]
+  })()
 
   const [idx, setIdx] = useState(0)
   const [hovered, setHovered] = useState(false)

@@ -11,10 +11,12 @@ function formatPrice(price) {
 }
 
 export default function PropertyCard({ property, promoBadge = '' }) {
-  const images =
-    property.images && property.images.length > 0
-      ? [property.thumbnail, ...property.images.map(i => i.imageUrl)]
-      : [property.thumbnail]
+  const images = (() => {
+    if (!property.images || property.images.length === 0) return [property.thumbnail]
+    // Nếu ảnh đầu tiên đã là thumbnail thì không duplicate
+    const imgUrls = property.images.map(i => i.imageUrl)
+    return imgUrls[0] === property.thumbnail ? imgUrls : [property.thumbnail, ...imgUrls]
+  })()
 
   const [idx, setIdx] = useState(0)
   const [hovered, setHovered] = useState(false)

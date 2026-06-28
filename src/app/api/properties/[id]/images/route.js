@@ -50,9 +50,15 @@ export async function POST(request, { params }) {
       });
     }
 
+    // Trả về toàn bộ danh sách ảnh sau khi thêm
+    const allImages = await prisma.propertyImage.findMany({
+      where: { propertyId },
+      orderBy: { id: 'asc' }
+    });
+
     return NextResponse.json({
       success: true,
-      image: newImage
+      images: allImages
     });
 
   } catch (error) {
