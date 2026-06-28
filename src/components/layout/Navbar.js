@@ -336,10 +336,13 @@ export default function Navbar() {
             </svg>
           </button>
           {mobileSaleOpen && (
-            <div className="mb-3 space-y-1 pl-3">
+            <div
+              className="mb-3 space-y-1 pl-3"
+              onClick={(e) => e.stopPropagation()}
+            >
               <Link
                 href="/bat-dong-san/mua-ban"
-                onClick={() => { setMenuOpen(false); setMobileSaleOpen(false); }}
+                onClick={(e) => { e.stopPropagation(); setMenuOpen(false); setMobileSaleOpen(false); }}
                 className={`block rounded-md px-3 py-2 text-sm font-medium ${path === "/bat-dong-san/mua-ban" ? "bg-primary text-white" : "text-slate-300 hover:text-white"}`}
               >
                 Mua bán
@@ -348,7 +351,7 @@ export default function Navbar() {
                 <Link
                   key={item.path}
                   href={item.path}
-                  onClick={() => { setMenuOpen(false); setMobileSaleOpen(false); }}
+                  onClick={(e) => { e.stopPropagation(); setMenuOpen(false); setMobileSaleOpen(false); }}
                   className={`block rounded-md px-3 py-1.5 text-xs ${path === item.path ? "bg-primary/30 text-white font-medium" : "text-slate-400 hover:text-slate-200"}`}
                 >
                   {item.label}
@@ -369,10 +372,13 @@ export default function Navbar() {
             </svg>
           </button>
           {mobileRentOpen && (
-            <div className="mb-3 space-y-1 pl-3">
+            <div
+              className="mb-3 space-y-1 pl-3"
+              onClick={(e) => e.stopPropagation()}
+            >
               <Link
                 href="/bat-dong-san/cho-thue"
-                onClick={() => { setMenuOpen(false); setMobileRentOpen(false); }}
+                onClick={(e) => { e.stopPropagation(); setMenuOpen(false); setMobileRentOpen(false); }}
                 className={`block rounded-md px-3 py-2 text-sm font-medium ${path === "/bat-dong-san/cho-thue" ? "bg-primary text-white" : "text-slate-300 hover:text-white"}`}
               >
                 Cho thuê
@@ -381,7 +387,7 @@ export default function Navbar() {
                 <Link
                   key={item.path}
                   href={item.path}
-                  onClick={() => { setMenuOpen(false); setMobileRentOpen(false); }}
+                  onClick={(e) => { e.stopPropagation(); setMenuOpen(false); setMobileRentOpen(false); }}
                   className={`block rounded-md px-3 py-1.5 text-xs ${path === item.path ? "bg-primary/30 text-white font-medium" : "text-slate-400 hover:text-slate-200"}`}
                 >
                   {item.label}
