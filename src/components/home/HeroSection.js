@@ -2,24 +2,29 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { LISTING_TYPES } from '@/lib/listings'
 
 const TABS = [
-  { key: LISTING_TYPES.sale.value, label: 'Mua Nhà', href: LISTING_TYPES.sale.path },
-  { key: LISTING_TYPES.rent.value, label: 'Thuê Nhà', href: LISTING_TYPES.rent.path },
-  { key: 'du-an', label: 'Dự Án', href: '/du-an' },
+  { key: 'mua-ban', label: 'Mua bán', href: '/bat-dong-san/mua-ban' },
+  { key: 'cho-thue', label: 'Cho thuê', href: '/bat-dong-san/cho-thue' },
 ]
 
 export default function HeroSection() {
-  const [activeTab, setActiveTab] = useState(LISTING_TYPES.sale.value)
-  const [query, setQuery] = useState('')
+  const [activeTab, setActiveTab] = useState('mua-ban')
+  const [fields, setFields] = useState({ q: '', city: '', district: '' })
   const router = useRouter()
 
   const handleSearch = (e) => {
     e.preventDefault()
     const tab = TABS.find(t => t.key === activeTab) || TABS[0]
-    router.push(`${tab.href}${query ? `?q=${encodeURIComponent(query)}` : ''}`)
+    const params = new URLSearchParams()
+    if (fields.q)         params.set('q',        fields.q)
+    if (fields.city)      params.set('city',     fields.city)
+    if (fields.district)  params.set('district', fields.district)
+    const qs = params.toString()
+    router.push(`${tab.href}${qs ? `?${qs}` : ''}`)
   }
+
+  const set = (key, val) => setFields(prev => ({ ...prev, [key]: val }))
 
   return (
     <section className="relative flex min-h-[82vh] items-center justify-center overflow-hidden">
@@ -43,7 +48,7 @@ export default function HeroSection() {
         </p>
 
         {/* Search Box */}
-        <div className="mx-auto mt-10 max-w-2xl">
+        <div className="mx-auto mt-10 max-w-3xl">
           {/* Tab Pills */}
           <div className="flex justify-center gap-0">
             {TABS.map(tab => (
@@ -64,14 +69,28 @@ export default function HeroSection() {
           {/* Input Row */}
           <form
             onSubmit={handleSearch}
-            className="flex overflow-hidden rounded-b-2xl rounded-tr-2xl bg-white shadow-2xl"
+            className="flex flex-col overflow-hidden rounded-b-2xl rounded-tr-2xl bg-white shadow-2xl sm:flex-row"
           >
             <input
               type="text"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              placeholder="Nhập địa chỉ, quận, thành phố..."
-              className="flex-1 px-6 py-4 text-base text-slate-700 placeholder-slate-400 focus:outline-none"
+              value={fields.q}
+              onChange={e => set('q', e.target.value)}
+              placeholder="Tìm tên, địa chỉ, dự án..."
+              className="flex-1 border-b border-slate-100 px-5 py-4 text-base text-slate-700 placeholder-slate-400 focus:outline-none sm:border-b-0 sm:border-r"
+            />
+            <input
+              type="text"
+              value={fields.city}
+              onChange={e => set('city', e.target.value)}
+              placeholder="Thành phố"
+              className="flex-1 border-b border-slate-100 px-5 py-4 text-base text-slate-700 placeholder-slate-400 focus:outline-none sm:border-b-0 sm:border-r"
+            />
+            <input
+              type="text"
+              value={fields.district}
+              onChange={e => set('district', e.target.value)}
+              placeholder="Quận / huyện"
+              className="flex-1 px-5 py-4 text-base text-slate-700 placeholder-slate-400 focus:outline-none"
             />
             <button
               type="submit"

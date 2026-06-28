@@ -35,9 +35,10 @@ export default function EditPropertyPage({ params }) {
     const fetchProperty = async () => {
       try {
         const response = await axios.get(`/api/properties/${id}`)
+        const priceStr = String(response.data.price || '')
         setFormData({
           ...response.data,
-          price: response.data.price
+          price: priceStr ? Number(priceStr.replace(/\./g, '')).toLocaleString('vi-VN') : ''
         })
         if (response.data.images && response.data.images.length > 0) {
           setExistingImages(response.data.images)
@@ -50,6 +51,18 @@ export default function EditPropertyPage({ params }) {
     }
     fetchProperty()
   }, [id])
+
+  const formatPriceInput = (value) => {
+    const digits = value.replace(/\D/g, '')
+    if (!digits) return ''
+    return Number(digits).toLocaleString('vi-VN')
+  }
+
+  const handlePriceChange = (e) => {
+    const raw = e.target.value
+    const formatted = formatPriceInput(raw)
+    setFormData(prev => ({ ...prev, price: formatted }))
+  }
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -114,9 +127,10 @@ export default function EditPropertyPage({ params }) {
     setError('')
     try {
       const { images, createdAt, ...payload } = formData
+      const rawPrice = payload.price.replace(/\./g, '')
       await axios.put(`/api/properties/${id}`, {
         ...payload,
-        price: payload.price.toString(),
+        price: rawPrice,
         area: parseInt(payload.area),
         bedrooms: parseInt(payload.bedrooms) || 0,
         bathrooms: parseInt(payload.bathrooms) || 0
@@ -181,11 +195,13 @@ export default function EditPropertyPage({ params }) {
             <div>
               <label className="block text-sm font-medium text-slate-700">Giá (VNĐ)</label>
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
                 name="price"
                 value={formData.price}
-                onChange={handleChange}
+                onChange={handlePriceChange}
                 required
+                placeholder="Ví dụ: 1.200.000.000"
                 className="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-secondary/50"
               />
             </div>
@@ -265,28 +281,23 @@ export default function EditPropertyPage({ params }) {
             <div>
               <label className="block text-sm font-medium text-slate-700">Loại bất động sản</label>
               <select
-                name="propertyType"
-                value={formData.propertyType}
-                onChange={handleChange}
-                className="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-secondary/50"
-              >
-                <option>Căn hộ</option>
-                <option>Nhà phố</option>
-                <option>Biệt thự</option>
-                <option>Đất nền</option>
-                <option>Shop</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700">Loại tin</label>
-              <select
                 name="listingType"
                 value={formData.listingType}
                 onChange={handleChange}
                 className="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-secondary/50"
               >
-                <option value="sale">Bán nhà</option>
-                <option value="rent">Cho thuê</option>
+                <optgroup label="Mua bán">
+                  <option value="ban_nha">Bán nhà</option>
+                  <option value="ban_toa_can_ho">Bán tòa căn hộ</option>
+                  <option value="ban_dat">Bán đất</option>
+                  <option value="ban_khach_san">Bán khách sạn</option>
+                </optgroup>
+                <optgroup label="Cho thuê">
+                  <option value="cho_thue_nha">Cho thuê nhà</option>
+                  <option value="cho_thue_mat_bang">Cho thuê mặt bằng</option>
+                  <option value="cho_thue_can_ho">Cho thuê căn hộ</option>
+                  <option value="cho_thue_dat">Cho thuê đất</option>
+                </optgroup>
               </select>
             </div>
           </div>

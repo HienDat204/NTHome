@@ -3,6 +3,20 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import axios from 'axios'
+import { getListingTypeLabel } from '@/lib/listings'
+
+const LISTING_LABELS = {
+  ban_nha: 'Bán nhà',
+  ban_toa_can_ho: 'Bán tòa căn hộ',
+  ban_dat: 'Bán đất',
+  ban_khach_san: 'Bán khách sạn',
+  cho_thue_nha: 'Cho thuê nhà',
+  cho_thue_mat_bang: 'Cho thuê mặt bằng',
+  cho_thue_can_ho: 'Cho thuê căn hộ',
+  cho_thue_dat: 'Cho thuê đất',
+  sale: 'Bán nhà',
+  rent: 'Cho thuê',
+}
 
 export default function AdminPropertiesPage() {
   const [properties, setProperties] = useState([])
@@ -60,8 +74,8 @@ export default function AdminPropertiesPage() {
               <th className="px-6 py-4">Thành phố</th>
               <th className="px-6 py-4">Quận/Huyện</th>
               <th className="px-6 py-4">Loại tin</th>
+              <th className="px-6 py-4">Nổi bật</th>
               <th className="px-6 py-4">Giá</th>
-              <th className="px-6 py-4">Loại</th>
               <th className="px-6 py-4">Hành động</th>
             </tr>
           </thead>
@@ -75,9 +89,15 @@ export default function AdminPropertiesPage() {
                 <td className="px-6 py-4 font-semibold text-slate-900">{property.title}</td>
                 <td className="px-6 py-4 text-slate-600">{property.city}</td>
                 <td className="px-6 py-4 text-slate-600">{property.district}</td>
-                <td className="px-6 py-4 text-slate-600">{property.listingType === 'rent' ? 'Cho thuê' : 'Bán nhà'}</td>
-                <td className="px-6 py-4 text-slate-600">{property.price.toLocaleString()}</td>
-                <td className="px-6 py-4 text-slate-600">{property.propertyType}</td>
+                <td className="px-6 py-4 text-slate-600">{LISTING_LABELS[property.listingType] || property.listingType}</td>
+                <td className="px-6 py-4">
+                  {property.featured ? (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-semibold text-yellow-800">★ Nổi bật</span>
+                  ) : (
+                    <span className="text-slate-400 text-xs">—</span>
+                  )}
+                </td>
+                <td className="px-6 py-4 text-slate-600">{property.price ? Number(property.price).toLocaleString('vi-VN') : '—'}</td>
                 <td className="px-6 py-4 space-x-3">
                   <Link href={`/admin/properties/${property.id}`} className="text-secondary">Sửa</Link>
                   <button onClick={() => removeProperty(property.id)} className="text-red-600">Xóa</button>

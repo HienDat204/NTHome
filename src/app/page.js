@@ -1,58 +1,69 @@
 import prisma from "@/lib/prisma";
 import HeroSection from "@/components/home/HeroSection";
-import DuAnMoiSection from "@/components/home/DuAnMoiSection";
+import FeaturedSection from "@/components/home/FeaturedSection";
 import BanNhaSection from "@/components/home/BanNhaSection";
 import ChoThueSection from "@/components/home/ChoThueSection";
 import TinTucSection from "@/components/home/TinTucSection";
-import { LISTING_TYPES } from "@/lib/listings";
+import { isSaleListingType, isRentListingType } from "@/lib/listings";
 
 export const dynamic = "force-dynamic";
 
+// Helper: serialize property (convert BigInt price to Number)
+function serializeProperty(p) {
+  return {
+    ...p,
+    price: Number(p.price),
+    createdAt: p.createdAt.toISOString(),
+    images: p.images ? p.images.slice(0, 3).map(i => i.imageUrl) : [],
+  }
+}
+
 export default async function HomePage() {
-  let projects = [];
-  let propertiesRaw = [];
-  let articlesRaw = [];
+  let featured = [];
+  let saleRecent = [];
+  let rentRecent = [];
+  let articlesList = [];
 
   try {
-    [projects, propertiesRaw, articlesRaw] = await Promise.all([
-      prisma.project.findMany({
-        take: 4,
-        orderBy: { id: "desc" },
-        include: { images: { orderBy: { id: "asc" } } },
+    const [allFeatured, allRecent, articlesResult] = await Promise.all([
+      // Featured properties
+      prisma.property.findMany({
+        where: { featured: true },
+        take: 8,
+        orderBy: { createdAt: "desc" },
+        include: { images: { orderBy: { id: "asc" }, take: 3 } },
       }),
+      // Recent properties (for sale/rent sections)
       prisma.property.findMany({
         take: 8,
         orderBy: { createdAt: "desc" },
-        include: { images: { orderBy: { id: "asc" } } },
+        include: { images: { orderBy: { id: "asc" }, take: 3 } },
       }),
       prisma.article.findMany({ take: 6, orderBy: { createdAt: "desc" } }),
-    ]);
+    ])
+
+    featured = allFeatured.map(serializeProperty)
+
+    // Filter into sale/rent in JS (lightweight — just string comparison)
+    const allRecentSerialized = allRecent.map(serializeProperty)
+    saleRecent = allRecentSerialized.filter((p) => isSaleListingType(p.listingType))
+    rentRecent = allRecentSerialized.filter((p) => isRentListingType(p.listingType))
+
+    articlesList = articlesResult.map((a) => ({
+      ...a,
+      createdAt: a.createdAt.toISOString(),
+    }))
   } catch (error) {
     console.error("HomePage DB fallback:", error);
   }
 
-  const properties = propertiesRaw;
-
-  const saleProperties = properties.filter(
-    (property) => (property.listingType || LISTING_TYPES.sale.value) === LISTING_TYPES.sale.value,
-  );
-  const rentProperties = properties.filter(
-    (property) => property.listingType === LISTING_TYPES.rent.value,
-  );
-
-  // Serialize article dates
-  const articles = articlesRaw.map((a) => ({
-    ...a,
-    createdAt: a.createdAt.toISOString(),
-  }));
-
   return (
     <div>
       <HeroSection />
-      <DuAnMoiSection projects={projects} />
-      <BanNhaSection properties={saleProperties} />
-      <ChoThueSection properties={rentProperties} />
-      <TinTucSection articles={articles} />
+      <FeaturedSection featuredProperties={featured} />
+      <BanNhaSection properties={saleRecent} />
+      <ChoThueSection properties={rentRecent} />
+      <TinTucSection articles={articlesList} />
     </div>
   );
 }

@@ -1,10 +1,9 @@
+'use client'
+
 import Link from 'next/link'
 import PropertyCard from '@/components/cards/PropertyCard'
-import { filterProperties, LISTING_TYPES } from '@/lib/listings'
 
-export default function BanNhaSection({ properties }) {
-  const saleProperties = filterProperties(properties, { listingType: LISTING_TYPES.sale.value })
-
+export default function BanNhaSection({ properties = [] }) {
   return (
     <section className="bg-white py-16">
       <div className="container mx-auto px-4">
@@ -18,7 +17,7 @@ export default function BanNhaSection({ properties }) {
             </p>
           </div>
           <Link
-            href={LISTING_TYPES.sale.path}
+            href="/bat-dong-san/mua-ban"
             className="flex items-center gap-2 rounded-lg border-2 border-primary px-5 py-2 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white"
           >
             Xem tất cả
@@ -29,17 +28,14 @@ export default function BanNhaSection({ properties }) {
         </div>
 
         {/* Grid */}
-        {saleProperties.length === 0 ? (
+        {properties.length === 0 ? (
           <div className="rounded-xl bg-slate-50 p-12 text-center text-slate-400">
             Chưa có bất động sản nào.
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {saleProperties.slice(0, 8).map((property) => (
-              <PropertyCard
-                key={property.id}
-                property={property}
-              />
+            {properties.slice(0, 8).map((property) => (
+              <PropertyCard key={property.id} property={property} />
             ))}
           </div>
         )}

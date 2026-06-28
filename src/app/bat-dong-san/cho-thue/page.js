@@ -1,13 +1,12 @@
 import prisma from '@/lib/prisma'
 import PropertyListingView from '@/components/properties/PropertyListingView'
-import { LISTING_TYPES } from '@/lib/listings'
 
 export const dynamic = 'force-dynamic'
 
 async function getProperties() {
   try {
     return await prisma.property.findMany({
-      include: { images: { orderBy: { id: 'asc' } } },
+      include: { images: { orderBy: { id: 'asc' }, take: 3 } },
       orderBy: { createdAt: 'desc' },
     })
   } catch (error) {
@@ -22,10 +21,11 @@ export default async function RentPropertiesPage({ searchParams }) {
   return (
     <PropertyListingView
       properties={properties}
-      listingType={LISTING_TYPES.rent.value}
+      listingType="rent"
+      parentListingType="rent"
       searchParams={searchParams}
-      title="Cho thuê"
-      description="Tổng hợp các bất động sản cho thuê theo đúng khu vực, loại nhà đất và nhu cầu sử dụng."
+      title="Cho thuê bất động sản"
+      description="Danh sách bất động sản cho thuê."
     />
   )
 }

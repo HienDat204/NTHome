@@ -3,11 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LISTING_MENU_ITEMS } from "@/lib/listings";
+import { SALE_TYPES, RENT_TYPES } from "@/lib/listings";
 
 const navLinks = [
   { href: "/", label: "Trang chủ" },
-  { href: "/du-an", label: "Dự án" },
   { href: "/tin-tuc", label: "Tin tức" },
   { href: "/lien-he", label: "Liên hệ" },
 ];
@@ -15,8 +14,10 @@ const navLinks = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [desktopListingOpen, setDesktopListingOpen] = useState(false);
-  const [mobileListingOpen, setMobileListingOpen] = useState(false);
+  const [desktopSaleOpen, setDesktopSaleOpen] = useState(false);
+  const [desktopRentOpen, setDesktopRentOpen] = useState(false);
+  const [mobileSaleOpen, setMobileSaleOpen] = useState(false);
+  const [mobileRentOpen, setMobileRentOpen] = useState(false);
   const [searchForm, setSearchForm] = useState({
     q: "",
     city: "",
@@ -24,7 +25,8 @@ export default function Navbar() {
   });
   const router = useRouter();
   const path = usePathname();
-  const isListingActive = path.startsWith("/bat-dong-san");
+  const isSaleActive = path.startsWith("/bat-dong-san/ban") || path.startsWith("/bat-dong-san/mua-ban");
+  const isRentActive = path.startsWith("/bat-dong-san/cho-thue");
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
@@ -67,56 +69,107 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+          {/* Mua bán dropdown */}
           <div
             className="relative"
-            onMouseEnter={() => setDesktopListingOpen(true)}
-            onMouseLeave={() => setDesktopListingOpen(false)}
+            onMouseEnter={() => setDesktopSaleOpen(true)}
+            onMouseLeave={() => setDesktopSaleOpen(false)}
           >
             <button
               type="button"
-              onClick={() => setDesktopListingOpen((open) => !open)}
+              onClick={() => setDesktopSaleOpen((open) => !open)}
               className={`flex items-center gap-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
-                isListingActive
+                isSaleActive
                   ? "bg-primary text-white"
                   : "text-slate-300 hover:bg-white/10 hover:text-white"
               }`}
             >
-              Bất động sản
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
+              Mua bán
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
 
-            {desktopListingOpen && (
+            {desktopSaleOpen && (
               <div className="absolute left-0 top-full z-50 w-64 pt-2">
                 <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur">
-                  {LISTING_MENU_ITEMS.map((item) => (
-                    <Link
-                      key={item.path}
-                      href={item.path}
-                      onClick={() => setDesktopListingOpen(false)}
-                      className={`block rounded-xl px-4 py-3 text-sm font-medium transition ${
-                        path === item.path
-                          ? "bg-primary text-white"
-                          : "text-slate-200 hover:bg-white/10 hover:text-white"
-                      }`}
-                    >
-                      <div className="font-semibold">{item.label}</div>
-                      <div className="mt-1 text-xs text-slate-400">
-                        {item.description}
-                      </div>
-                    </Link>
-                  ))}
+                  <Link
+                    href="/bat-dong-san/mua-ban"
+                    onClick={() => setDesktopSaleOpen(false)}
+                    className={`block rounded-xl px-4 py-3 text-sm font-medium transition ${
+                      path === "/bat-dong-san/mua-ban" ? "bg-primary text-white" : "text-slate-200 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    <div className="font-semibold">Mua bán</div>
+                    <div className="mt-1 text-xs text-slate-400">Danh sách bất động sản đang bán.</div>
+                  </Link>
+                  <div className="mt-1 border-t border-white/10 pt-1">
+                    {Object.values(SALE_TYPES).map((item) => (
+                      <Link
+                        key={item.path}
+                        href={item.path}
+                        onClick={() => setDesktopSaleOpen(false)}
+                        className={`block rounded-lg px-4 py-2 text-xs transition ${
+                          path === item.path ? "bg-primary/30 text-white font-medium" : "text-slate-400 hover:text-slate-200"
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Cho thuê dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setDesktopRentOpen(true)}
+            onMouseLeave={() => setDesktopRentOpen(false)}
+          >
+            <button
+              type="button"
+              onClick={() => setDesktopRentOpen((open) => !open)}
+              className={`flex items-center gap-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                isRentActive
+                  ? "bg-primary text-white"
+                  : "text-slate-300 hover:bg-white/10 hover:text-white"
+              }`}
+            >
+              Cho thuê
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {desktopRentOpen && (
+              <div className="absolute left-0 top-full z-50 w-64 pt-2">
+                <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-950/95 p-2 shadow-2xl backdrop-blur">
+                  <Link
+                    href="/bat-dong-san/cho-thue"
+                    onClick={() => setDesktopRentOpen(false)}
+                    className={`block rounded-xl px-4 py-3 text-sm font-medium transition ${
+                      path === "/bat-dong-san/cho-thue" ? "bg-primary text-white" : "text-slate-200 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    <div className="font-semibold">Cho thuê</div>
+                    <div className="mt-1 text-xs text-slate-400">Tổng hợp những bất động sản cho thuê hot nhất.</div>
+                  </Link>
+                  <div className="mt-1 border-t border-white/10 pt-1">
+                    {Object.values(RENT_TYPES).map((item) => (
+                      <Link
+                        key={item.path}
+                        href={item.path}
+                        onClick={() => setDesktopRentOpen(false)}
+                        className={`block rounded-lg px-4 py-2 text-xs transition ${
+                          path === item.path ? "bg-primary/30 text-white font-medium" : "text-slate-400 hover:text-slate-200"
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -271,37 +324,65 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+          {/* Mua bán mobile */}
           <button
             type="button"
-            onClick={() => setMobileListingOpen((open) => !open)}
-            className={`mb-2 flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium ${isListingActive ? "bg-primary text-white" : "text-slate-300 hover:text-white"}`}
+            onClick={() => setMobileSaleOpen((open) => !open)}
+            className={`mb-2 flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium ${isSaleActive ? "bg-primary text-white" : "text-slate-300 hover:text-white"}`}
           >
-            <span>Bất động sản</span>
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
+            <span>Mua bán</span>
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </button>
-          {mobileListingOpen && (
-            <div className="mb-3 space-y-2 pl-3">
-              {LISTING_MENU_ITEMS.map((item) => (
+          {mobileSaleOpen && (
+            <div className="mb-3 space-y-1 pl-3">
+              <Link
+                href="/bat-dong-san/mua-ban"
+                onClick={() => { setMenuOpen(false); setMobileSaleOpen(false); }}
+                className={`block rounded-md px-3 py-2 text-sm font-medium ${path === "/bat-dong-san/mua-ban" ? "bg-primary text-white" : "text-slate-300 hover:text-white"}`}
+              >
+                Mua bán
+              </Link>
+              {Object.values(SALE_TYPES).map((item) => (
                 <Link
                   key={item.path}
                   href={item.path}
-                  onClick={() => {
-                    setMenuOpen(false);
-                    setMobileListingOpen(false);
-                  }}
-                  className={`block rounded-md px-3 py-2 text-sm font-medium ${path === item.path ? "bg-primary text-white" : "text-slate-300 hover:text-white"}`}
+                  onClick={() => { setMenuOpen(false); setMobileSaleOpen(false); }}
+                  className={`block rounded-md px-3 py-1.5 text-xs ${path === item.path ? "bg-primary/30 text-white font-medium" : "text-slate-400 hover:text-slate-200"}`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          )}
+
+          {/* Cho thuê mobile */}
+          <button
+            type="button"
+            onClick={() => setMobileRentOpen((open) => !open)}
+            className={`mb-2 flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium ${isRentActive ? "bg-primary text-white" : "text-slate-300 hover:text-white"}`}
+          >
+            <span>Cho thuê</span>
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {mobileRentOpen && (
+            <div className="mb-3 space-y-1 pl-3">
+              <Link
+                href="/bat-dong-san/cho-thue"
+                onClick={() => { setMenuOpen(false); setMobileRentOpen(false); }}
+                className={`block rounded-md px-3 py-2 text-sm font-medium ${path === "/bat-dong-san/cho-thue" ? "bg-primary text-white" : "text-slate-300 hover:text-white"}`}
+              >
+                Cho thuê
+              </Link>
+              {Object.values(RENT_TYPES).map((item) => (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  onClick={() => { setMenuOpen(false); setMobileRentOpen(false); }}
+                  className={`block rounded-md px-3 py-1.5 text-xs ${path === item.path ? "bg-primary/30 text-white font-medium" : "text-slate-400 hover:text-slate-200"}`}
                 >
                   {item.label}
                 </Link>

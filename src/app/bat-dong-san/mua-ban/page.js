@@ -10,21 +10,22 @@ async function getProperties() {
       orderBy: { createdAt: 'desc' },
     })
   } catch (error) {
-    console.error('BanNhaPage DB fallback:', error)
+    console.error('MuaBanPage DB fallback:', error)
     return []
   }
 }
 
-export default async function BanNhaPage({ searchParams }) {
+export default async function MuaBanPage({ searchParams }) {
   const properties = await getProperties()
+
   return (
     <PropertyListingView
       properties={properties}
-      listingType="ban_nha"
+      listingType="sale"
       parentListingType="sale"
       searchParams={searchParams}
-      title="Bán nhà"
-      description="Danh sách bán nhà, nhà phố, biệt thự, căn hộ đang bán."
+      title="Mua bán bất động sản"
+      description="Danh sách bất động sản đang bán."
     />
   )
 }

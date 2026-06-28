@@ -47,7 +47,7 @@ export default async function PropertyDetailPage({ params }) {
               {property.title}
             </h1>
             <p className="mt-4 text-3xl font-semibold text-secondary">
-              {property.price.toLocaleString()} ₫
+              {Number(property.price).toLocaleString('vi-VN')} ₫
             </p>
             <p className="mt-4 text-slate-600">
               {property.address}, {property.district}, {property.city}
@@ -77,7 +77,7 @@ export default async function PropertyDetailPage({ params }) {
             <h2 className="text-2xl font-semibold text-slate-900">
               Mô tả chi tiết
             </h2>
-            <p className="mt-4 text-slate-600 leading-8">
+            <p className="mt-4 whitespace-pre-wrap text-slate-600 leading-8">
               {property.description}
             </p>
           </div>
