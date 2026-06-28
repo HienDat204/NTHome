@@ -19,7 +19,9 @@ export default function Footer() {
             </div>
             <div>
               <p className="text-xs text-red-100">Hotline hỗ trợ 24/7</p>
-              <p className="text-xl font-extrabold text-white">0935 278 703</p>
+              <p className="text-xl font-extrabold text-white">
+                0935 278 703 - 0777 520 590
+              </p>
             </div>
           </div>
           <a
@@ -38,7 +40,9 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-2xl">🏠</span>
-              <span className="text-xl font-bold text-white">Next Estate</span>
+              <span className="text-xl font-bold text-white">
+                Kiên Hưng Group
+              </span>
             </div>
             <p className="mt-4 text-sm leading-7 text-slate-400">
               Nền tảng bất động sản chuyên nghiệp, tối ưu SEO, responsive và dễ
@@ -102,7 +106,7 @@ export default function Footer() {
                     clipRule="evenodd"
                   />
                 </svg>
-                Hà Nội, Việt Nam
+                22B4-An Thượng 38, Đà Nẵng, Việt Nam
               </li>
               <li className="flex items-center gap-2">
                 <svg
@@ -113,7 +117,7 @@ export default function Footer() {
                   <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                 </svg>
                 <a href="tel:0935278703" className="hover:text-white">
-                  0935 278 703
+                  0935 278 703 - 0777 520 590
                 </a>
               </li>
               <li className="flex items-center gap-2">
@@ -148,118 +152,12 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-
-          {/* Hỗ trợ */}
-          <div>
-            <h4 className="text-sm font-bold uppercase tracking-widest text-white">
-              Hỗ trợ
-            </h4>
-            <ul className="mt-4 space-y-2 text-sm">
-              <li>
-                <Link
-                  href="/"
-                  className="transition hover:text-white hover:underline"
-                >
-                  Trang chủ
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={LISTING_TYPES.sale.path}
-                  className="transition hover:text-white hover:underline"
-                >
-                  Bán nhà
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={LISTING_TYPES.rent.path}
-                  className="transition hover:text-white hover:underline"
-                >
-                  Cho thuê
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/du-an"
-                  className="transition hover:text-white hover:underline"
-                >
-                  Dự án
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tin-tuc"
-                  className="transition hover:text-white hover:underline"
-                >
-                  Tin tức
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/lien-he"
-                  className="transition hover:text-white hover:underline"
-                >
-                  Liên hệ
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Giới thiệu */}
-          <div>
-            <h4 className="text-sm font-bold uppercase tracking-widest text-white">
-              Giới thiệu
-            </h4>
-            <ul className="mt-4 space-y-2 text-sm">
-              <li>
-                <Link
-                  href="/du-an"
-                  className="transition hover:text-white hover:underline"
-                >
-                  Dự án BĐS
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={LISTING_TYPES.sale.path}
-                  className="transition hover:text-white hover:underline"
-                >
-                  Mua nhà
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={LISTING_TYPES.rent.path}
-                  className="transition hover:text-white hover:underline"
-                >
-                  Thuê nhà
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/du-an"
-                  className="transition hover:text-white hover:underline"
-                >
-                  Dự án tại TP HCM
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/admin/login"
-                  className="transition hover:text-white hover:underline"
-                >
-                  Quản trị viên
-                </Link>
-              </li>
-            </ul>
-          </div>
         </div>
 
         {/* Bottom */}
         <div className="mt-10 border-t border-white/10 pt-6 text-center text-sm text-slate-500">
-          © 2026 Next Estate. All rights reserved. Thiết kế website bất động sản
-          chuyên nghiệp.
+          © 2026 Kiên Hưng Group. All rights reserved. Thiết kế website bất động
+          sản chuyên nghiệp.
         </div>
       </div>
     </footer>

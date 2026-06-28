@@ -1,21 +1,22 @@
-import './globals.css'
-import { Roboto } from 'next/font/google'
-import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
-import FloatingButtons from '@/components/layout/FloatingButtons'
+import "./globals.css";
+import { Roboto } from "next/font/google";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import FloatingButtons from "@/components/layout/FloatingButtons";
 
 const roboto = Roboto({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  display: 'swap',
-  weight: ['400', '500', '700']
-})
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+  weight: ["400", "500", "700"],
+});
 
 export const metadata = {
-  title: 'Next Estate - Bất động sản cao cấp',
-  description: 'Website bất động sản chuyên nghiệp, tìm kiếm dự án, tin tức và quản trị nội dung dễ dàng.',
-  metadataBase: new URL('http://localhost:3000'),
-}
+  title: "Kiên Hưng Group - Bất động sản cao cấp",
+  description:
+    "Website bất động sản chuyên nghiệp, tìm kiếm dự án, tin tức và quản trị nội dung dễ dàng.",
+  metadataBase: new URL("http://localhost:3000"),
+};
 
 export default function RootLayout({ children }) {
   return (
@@ -27,6 +28,5 @@ export default function RootLayout({ children }) {
         <FloatingButtons />
       </body>
     </html>
-  )
+  );
 }
-

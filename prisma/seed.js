@@ -187,13 +187,13 @@ const seedData = {
     },
   ],
   setting: {
-    siteName: "Next Estate",
+    siteName: "Kiên Hưng Group",
     logo: "/logo.png",
     hotline: "0935 278 703",
     email: "info@nextestate.vn",
     facebook: "https://facebook.com/nextestate",
     zalo: "0935278703",
-    address: "Hà Nội, Việt Nam",
+    address: "22B4-An Thượng 38,Đà Nẵng, Việt Nam",
   },
 };
 

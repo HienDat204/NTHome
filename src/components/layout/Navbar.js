@@ -25,7 +25,9 @@ export default function Navbar() {
   });
   const router = useRouter();
   const path = usePathname();
-  const isSaleActive = path.startsWith("/bat-dong-san/ban") || path.startsWith("/bat-dong-san/mua-ban");
+  const isSaleActive =
+    path.startsWith("/bat-dong-san/ban") ||
+    path.startsWith("/bat-dong-san/mua-ban");
   const isRentActive = path.startsWith("/bat-dong-san/cho-thue");
 
   const handleSearchSubmit = (event) => {
@@ -49,7 +51,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <span className="text-2xl">🏠</span>
-          <span className="text-lg font-bold text-white">Next Estate</span>
+          <span className="text-lg font-bold text-white">Kiên Hưng Group</span>
         </Link>
 
         {/* Desktop Nav */}
@@ -85,8 +87,18 @@ export default function Navbar() {
               }`}
             >
               Mua bán
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
 
@@ -97,11 +109,15 @@ export default function Navbar() {
                     href="/bat-dong-san/mua-ban"
                     onClick={() => setDesktopSaleOpen(false)}
                     className={`block rounded-xl px-4 py-3 text-sm font-medium transition ${
-                      path === "/bat-dong-san/mua-ban" ? "bg-primary text-white" : "text-slate-200 hover:bg-white/10 hover:text-white"
+                      path === "/bat-dong-san/mua-ban"
+                        ? "bg-primary text-white"
+                        : "text-slate-200 hover:bg-white/10 hover:text-white"
                     }`}
                   >
                     <div className="font-semibold">Mua bán</div>
-                    <div className="mt-1 text-xs text-slate-400">Danh sách bất động sản đang bán.</div>
+                    <div className="mt-1 text-xs text-slate-400">
+                      Danh sách bất động sản đang bán.
+                    </div>
                   </Link>
                   <div className="mt-1 border-t border-white/10 pt-1">
                     {Object.values(SALE_TYPES).map((item) => (
@@ -110,7 +126,9 @@ export default function Navbar() {
                         href={item.path}
                         onClick={() => setDesktopSaleOpen(false)}
                         className={`block rounded-lg px-4 py-2 text-xs transition ${
-                          path === item.path ? "bg-primary/30 text-white font-medium" : "text-slate-400 hover:text-slate-200"
+                          path === item.path
+                            ? "bg-primary/30 text-white font-medium"
+                            : "text-slate-400 hover:text-slate-200"
                         }`}
                       >
                         {item.label}
@@ -138,8 +156,18 @@ export default function Navbar() {
               }`}
             >
               Cho thuê
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
 
@@ -150,11 +178,15 @@ export default function Navbar() {
                     href="/bat-dong-san/cho-thue"
                     onClick={() => setDesktopRentOpen(false)}
                     className={`block rounded-xl px-4 py-3 text-sm font-medium transition ${
-                      path === "/bat-dong-san/cho-thue" ? "bg-primary text-white" : "text-slate-200 hover:bg-white/10 hover:text-white"
+                      path === "/bat-dong-san/cho-thue"
+                        ? "bg-primary text-white"
+                        : "text-slate-200 hover:bg-white/10 hover:text-white"
                     }`}
                   >
                     <div className="font-semibold">Cho thuê</div>
-                    <div className="mt-1 text-xs text-slate-400">Tổng hợp những bất động sản cho thuê hot nhất.</div>
+                    <div className="mt-1 text-xs text-slate-400">
+                      Tổng hợp những bất động sản cho thuê hot nhất.
+                    </div>
                   </Link>
                   <div className="mt-1 border-t border-white/10 pt-1">
                     {Object.values(RENT_TYPES).map((item) => (
@@ -163,7 +195,9 @@ export default function Navbar() {
                         href={item.path}
                         onClick={() => setDesktopRentOpen(false)}
                         className={`block rounded-lg px-4 py-2 text-xs transition ${
-                          path === item.path ? "bg-primary/30 text-white font-medium" : "text-slate-400 hover:text-slate-200"
+                          path === item.path
+                            ? "bg-primary/30 text-white font-medium"
+                            : "text-slate-400 hover:text-slate-200"
                         }`}
                       >
                         {item.label}
@@ -331,8 +365,18 @@ export default function Navbar() {
             className={`mb-2 flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium ${isSaleActive ? "bg-primary text-white" : "text-slate-300 hover:text-white"}`}
           >
             <span>Mua bán</span>
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </button>
           {mobileSaleOpen && (
@@ -342,7 +386,11 @@ export default function Navbar() {
             >
               <Link
                 href="/bat-dong-san/mua-ban"
-                onClick={(e) => { e.stopPropagation(); setMenuOpen(false); setMobileSaleOpen(false); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMenuOpen(false);
+                  setMobileSaleOpen(false);
+                }}
                 className={`block rounded-md px-3 py-2 text-sm font-medium ${path === "/bat-dong-san/mua-ban" ? "bg-primary text-white" : "text-slate-300 hover:text-white"}`}
               >
                 Mua bán
@@ -351,7 +399,11 @@ export default function Navbar() {
                 <Link
                   key={item.path}
                   href={item.path}
-                  onClick={(e) => { e.stopPropagation(); setMenuOpen(false); setMobileSaleOpen(false); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMenuOpen(false);
+                    setMobileSaleOpen(false);
+                  }}
                   className={`block rounded-md px-3 py-1.5 text-xs ${path === item.path ? "bg-primary/30 text-white font-medium" : "text-slate-400 hover:text-slate-200"}`}
                 >
                   {item.label}
@@ -367,8 +419,18 @@ export default function Navbar() {
             className={`mb-2 flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium ${isRentActive ? "bg-primary text-white" : "text-slate-300 hover:text-white"}`}
           >
             <span>Cho thuê</span>
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </button>
           {mobileRentOpen && (
@@ -378,7 +440,11 @@ export default function Navbar() {
             >
               <Link
                 href="/bat-dong-san/cho-thue"
-                onClick={(e) => { e.stopPropagation(); setMenuOpen(false); setMobileRentOpen(false); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMenuOpen(false);
+                  setMobileRentOpen(false);
+                }}
                 className={`block rounded-md px-3 py-2 text-sm font-medium ${path === "/bat-dong-san/cho-thue" ? "bg-primary text-white" : "text-slate-300 hover:text-white"}`}
               >
                 Cho thuê
@@ -387,7 +453,11 @@ export default function Navbar() {
                 <Link
                   key={item.path}
                   href={item.path}
-                  onClick={(e) => { e.stopPropagation(); setMenuOpen(false); setMobileRentOpen(false); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMenuOpen(false);
+                    setMobileRentOpen(false);
+                  }}
                   className={`block rounded-md px-3 py-1.5 text-xs ${path === item.path ? "bg-primary/30 text-white font-medium" : "text-slate-400 hover:text-slate-200"}`}
                 >
                   {item.label}

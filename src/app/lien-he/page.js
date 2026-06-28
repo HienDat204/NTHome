@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Liên hệ | Next Estate",
+  title: "Liên hệ | Kiên Hưng Group",
 };
 
 export default function ContactPage() {
@@ -24,7 +24,7 @@ export default function ContactPage() {
             <p className="text-lg font-semibold text-slate-900">0935 278 703</p>
             <p className="text-sm text-slate-500">Địa chỉ</p>
             <p className="text-lg font-semibold text-slate-900">
-              Hà Nội, Việt Nam
+              22B4-An Thượng 38, Đà Nẵng, Việt Nam
             </p>
           </div>
         </div>
