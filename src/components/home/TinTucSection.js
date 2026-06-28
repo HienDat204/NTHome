@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString('vi-VN', {
@@ -47,10 +48,12 @@ export default function TinTucSection({ articles }) {
               >
                 {article.thumbnail && (
                   <div className="h-48 overflow-hidden">
-                    <img
+                    <Image
                       src={article.thumbnail}
                       alt={article.title}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                   </div>
                 )}

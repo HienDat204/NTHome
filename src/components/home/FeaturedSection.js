@@ -49,7 +49,7 @@ export default function FeaturedSection({ featuredProperties = [] }) {
         {/* Grid */}
         {featuredProperties.length === 0 ? (
           <div className="rounded-xl bg-white p-12 text-center text-slate-400 shadow-sm">
-            Chưa có sản phẩm nổi bật nào. Vui lòng bật tính năng "Nổi bật" cho
+            Chưa có sản phẩm nổi bật nào. Vui lòng bật tính năng &ldquo;Nổi bật&rdquo; cho
             bất động sản trong trang Admin.
           </div>
         ) : (

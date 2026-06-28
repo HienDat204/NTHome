@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 function formatPrice(price) {
   const n = Number(price)
@@ -32,10 +33,12 @@ export default function PropertyCard({ property, promoBadge = '' }) {
     <div className="group overflow-hidden rounded-xl bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       {/* Image */}
       <div className="relative h-52 overflow-hidden">
-        <img
+        <Image
           src={images[idx]}
           alt={property.title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
 
         {/* Prev / Next arrows */}
