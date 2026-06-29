@@ -13,8 +13,8 @@ function serializeProperty(p) {
   return {
     ...p,
     price: Number(p.price),
-    createdAt: p.createdAt.toISOString(),
-    images: p.images ? p.images.map(i => ({ imageUrl: i.imageUrl })) : [],
+    createdAt: p.createdAt ? p.createdAt.toISOString() : null,
+    images: p.images || [],
   }
 }
 
@@ -26,25 +26,36 @@ export default async function HomePage() {
 
   try {
     const [allFeatured, allRecent, articlesResult] = await Promise.all([
-      // Featured properties
       prisma.property.findMany({
         where: { featured: true },
         take: 8,
         orderBy: { createdAt: "desc" },
-        include: { images: { orderBy: { id: "asc" } } },
+        select: {
+          id: true, slug: true, title: true, price: true, area: true,
+          bedrooms: true, bathrooms: true, address: true, district: true,
+          city: true, listingType: true, propertyType: true, promoBadge: true,
+          thumbnail: true, images: { select: { imageUrl: true }, orderBy: { id: "asc" } },
+        },
       }),
-      // Recent properties (for sale/rent sections)
       prisma.property.findMany({
-        take: 8,
+        take: 16,
         orderBy: { createdAt: "desc" },
-        include: { images: { orderBy: { id: "asc" } } },
+        select: {
+          id: true, slug: true, title: true, price: true, area: true,
+          bedrooms: true, bathrooms: true, address: true, district: true,
+          city: true, listingType: true, propertyType: true, promoBadge: true,
+          thumbnail: true, images: { select: { imageUrl: true }, orderBy: { id: "asc" } },
+        },
       }),
-      prisma.article.findMany({ take: 6, orderBy: { createdAt: "desc" } }),
+      prisma.article.findMany({
+        take: 6,
+        orderBy: { createdAt: "desc" },
+        select: { id: true, title: true, slug: true, excerpt: true, thumbnail: true, createdAt: true },
+      }),
     ])
 
     featured = allFeatured.map(serializeProperty)
 
-    // Filter into sale/rent in JS (lightweight — just string comparison)
     const allRecentSerialized = allRecent.map(serializeProperty)
     saleRecent = allRecentSerialized.filter((p) => isSaleListingType(p.listingType))
     rentRecent = allRecentSerialized.filter((p) => isRentListingType(p.listingType))

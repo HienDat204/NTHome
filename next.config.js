@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    outputFileTracingIncludes: {
-      "/*": ["./database/database.db"],
-    },
+    optimizePackageImports: ['react-icons'],
   },
   images: {
     remotePatterns: [
@@ -16,6 +14,8 @@ const nextConfig = {
         hostname: "images.pexels.com",
       },
     ],
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 3600,
   },
 };
 

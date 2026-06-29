@@ -2,13 +2,32 @@ import prisma from "@/lib/prisma";
 import QuickContactForm from "@/components/properties/QuickContactForm";
 import PropertyGallery from "@/components/properties/PropertyGallery";
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic'
+
+export async function generateStaticParams() {
+  try {
+    const properties = await prisma.property.findMany({
+      select: { slug: true },
+      take: 50,
+      orderBy: { createdAt: 'desc' },
+    })
+    return properties.map((p) => ({ slug: p.slug }))
+  } catch {
+    return []
+  }
+}
 
 async function getProperty(slug) {
   try {
     return await prisma.property.findUnique({
       where: { slug },
-      include: { images: { orderBy: { id: 'asc' } } },
+      select: {
+        id: true, slug: true, title: true, price: true, area: true,
+        bedrooms: true, bathrooms: true, address: true, district: true,
+        city: true, listingType: true, propertyType: true, promoBadge: true,
+        thumbnail: true,
+        images: { select: { imageUrl: true }, orderBy: { id: 'asc' } },
+      },
     });
   } catch (error) {
     console.error("PropertyDetailPage DB fallback:", error);

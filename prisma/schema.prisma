@@ -35,6 +35,11 @@ model Property {
   featured    Boolean         @default(false)
   createdAt   DateTime        @default(now())
   images      PropertyImage[]
+
+  @@index([listingType])
+  @@index([city])
+  @@index([district])
+  @@index([featured])
 }
 
 model PropertyImage {
@@ -42,6 +47,8 @@ model PropertyImage {
   property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   propertyId Int
   imageUrl   String
+
+  @@index([propertyId])
 }
 
 model ProjectImage {

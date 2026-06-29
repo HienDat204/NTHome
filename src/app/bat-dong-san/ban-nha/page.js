@@ -3,11 +3,21 @@ import PropertyListingView from '@/components/properties/PropertyListingView'
 
 export const dynamic = 'force-dynamic'
 
-async function getProperties() {
+const PAGE_SIZE = 12
+
+async function getProperties(page = 1) {
   try {
     return await prisma.property.findMany({
-      include: { images: { orderBy: { id: 'asc' } } },
+      select: {
+        id: true, slug: true, title: true, price: true, area: true,
+        bedrooms: true, bathrooms: true, address: true, district: true,
+        city: true, listingType: true, propertyType: true, promoBadge: true,
+        thumbnail: true,
+        images: { select: { imageUrl: true }, orderBy: { id: 'asc' } },
+      },
       orderBy: { createdAt: 'desc' },
+      take: PAGE_SIZE,
+      skip: (page - 1) * PAGE_SIZE,
     })
   } catch (error) {
     console.error('BanNhaPage DB fallback:', error)
@@ -16,7 +26,8 @@ async function getProperties() {
 }
 
 export default async function BanNhaPage({ searchParams }) {
-  const properties = await getProperties()
+  const page = Number(searchParams?.page) || 1
+  const properties = await getProperties(page)
   return (
     <PropertyListingView
       properties={properties}

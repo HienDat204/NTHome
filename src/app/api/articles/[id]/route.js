@@ -1,13 +1,9 @@
 import { NextResponse } from "next/server";
 import { requireAdminWriteAccess } from "@/lib/admin-api-guard";
+import prisma from "@/lib/prisma";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-async function getPrisma() {
-  const { default: prisma } = await import("@/lib/prisma");
-  return prisma;
-}
 
 function getArticleId(params) {
   const id = Number.parseInt(params?.id, 10);
@@ -21,10 +17,7 @@ export async function GET(request, { params }) {
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
     }
 
-    const prisma = await getPrisma();
-    const article = await prisma.article.findUnique({
-      where: { id },
-    });
+    const article = await prisma.article.findUnique({ where: { id } });
     if (!article)
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     return NextResponse.json(article);
@@ -45,11 +38,7 @@ export async function PUT(request, { params }) {
     }
 
     const data = await request.json();
-    const prisma = await getPrisma();
-    const updated = await prisma.article.update({
-      where: { id },
-      data,
-    });
+    const updated = await prisma.article.update({ where: { id }, data });
     return NextResponse.json(updated);
   } catch (error) {
     console.error("PUT /api/articles/[id] error:", error);
@@ -67,9 +56,8 @@ export async function DELETE(request, { params }) {
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
     }
 
-    const prisma = await getPrisma();
-      await prisma.article.delete({ where: { id } });
-      return new NextResponse(null, { status: 204 });
+    await prisma.article.delete({ where: { id } });
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error("DELETE /api/articles/[id] error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -9,7 +9,7 @@ export default function FloatingButtons() {
         target="_blank"
         rel="noopener noreferrer"
         title="Chat Zalo"
-        className="group relative flex h-13 w-13 items-center justify-center"
+        className="group relative flex h-12 w-12 items-center justify-center"
       >
         <span className="absolute -left-20 hidden whitespace-nowrap rounded-lg bg-slate-800 px-3 py-1 text-xs text-white group-hover:block">
           Chat Zalo
@@ -25,7 +25,7 @@ export default function FloatingButtons() {
       <a
         href="tel:0935278703"
         title="Gọi ngay: 0935 278 703"
-        className="group relative flex h-13 w-13 items-center justify-center"
+        className="group relative flex h-12 w-12 items-center justify-center"
       >
         <span className="absolute -left-28 hidden whitespace-nowrap rounded-lg bg-slate-800 px-3 py-1 text-xs text-white group-hover:block">
           0935 278 703

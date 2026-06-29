@@ -18,11 +18,17 @@ export async function PUT(request) {
     if (deniedResponse) return deniedResponse
 
     const data = await request.json()
-    const settings = await prisma.setting.findFirst()
-    const updated = await prisma.setting.update({
-      where: { id: settings.id },
-      data
-    })
+    const existing = await prisma.setting.findFirst()
+
+    let updated
+    if (existing) {
+      updated = await prisma.setting.update({
+        where: { id: existing.id },
+        data,
+      })
+    } else {
+      updated = await prisma.setting.create({ data })
+    }
     return NextResponse.json(updated)
   } catch (error) {
     console.error('PUT /api/settings error:', error)

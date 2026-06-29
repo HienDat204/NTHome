@@ -8,7 +8,11 @@ async function getProjects() {
   try {
     return await prisma.project.findMany({
       orderBy: { id: "desc" },
-      include: { images: { orderBy: { id: 'asc' } } }
+      select: {
+        id: true, slug: true, name: true, investor: true, address: true,
+        description: true, highlightInfo: true, thumbnail: true,
+        images: { select: { imageUrl: true }, orderBy: { id: 'asc' } },
+      }
     });
   } catch (error) {
     console.error("ProjectsPage DB fallback:", error);

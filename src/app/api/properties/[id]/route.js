@@ -6,7 +6,13 @@ export async function GET(request, { params }) {
   try {
     const property = await prisma.property.findUnique({
       where: { id: parseInt(params.id) },
-      include: { images: { orderBy: { id: 'asc' } } }
+      select: {
+        id: true, slug: true, title: true, price: true, area: true,
+        bedrooms: true, bathrooms: true, address: true, district: true,
+        city: true, listingType: true, propertyType: true, promoBadge: true,
+        thumbnail: true,
+        images: { select: { imageUrl: true }, orderBy: { id: 'asc' } },
+      }
     })
     if (!property) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     return NextResponse.json(property)

@@ -7,9 +7,3 @@ export async function verifyAdmin(email, password) {
   const valid = await bcrypt.compare(password, admin.password);
   return valid ? admin : null;
 }
-
-export const authOptions = {
-  providers: [],
-  callbacks: {},
-  pages: {},
-};

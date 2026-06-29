@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 export default function PropertyGallery({ thumbnail, images, title }) {
   // Tạo mảng tất cả ảnh: thumbnail + images
@@ -26,11 +27,14 @@ export default function PropertyGallery({ thumbnail, images, title }) {
   return (
     <div className="space-y-6">
       {/* Ảnh chính với mũi tên */}
-      <div className="relative overflow-hidden rounded-[2rem] bg-slate-900 group">
-        <img
+      <div className="relative overflow-hidden rounded-[2rem] bg-slate-900 group h-[500px]">
+        <Image
           src={allImages[currentIndex].imageUrl}
           alt={title}
-          className="h-[500px] w-full object-cover"
+          fill
+          sizes="(max-width: 1024px) 100vw, 60vw"
+          className="object-cover"
+          priority={currentIndex === 0}
         />
 
         {/* Mũi tên trái */}
@@ -72,16 +76,18 @@ export default function PropertyGallery({ thumbnail, images, title }) {
             <button
               key={image.id}
               onClick={() => goToImage(index)}
-              className={`relative overflow-hidden rounded-[1.5rem] transition-all ${
+              className={`relative h-32 overflow-hidden rounded-[1.5rem] transition-all ${
                 currentIndex === index
                   ? 'ring-4 ring-secondary ring-offset-2 scale-105'
                   : 'hover:scale-105 opacity-70 hover:opacity-100'
               }`}
             >
-              <img
+              <Image
                 src={image.imageUrl}
                 alt={`${title} - Ảnh ${index + 1}`}
-                className="h-32 w-full object-cover"
+                fill
+                sizes="25vw"
+                className="object-cover"
               />
             </button>
           ))}

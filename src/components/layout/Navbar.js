@@ -228,7 +228,7 @@ export default function Navbar() {
         {/* Right: Hotline + Search + Hamburger */}
         <div className="flex items-center gap-2">
           <a
-            href="tel:0909999999"
+            href="tel:0935278703"
             className="hidden items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 md:flex"
           >
             <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
@@ -482,7 +482,7 @@ export default function Navbar() {
               </Link>
             ))}
           <a
-            href="tel:0909999999"
+            href="tel:0935278703"
             className="mt-3 flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white"
           >
             <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">

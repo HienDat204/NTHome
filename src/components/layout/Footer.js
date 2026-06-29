@@ -25,7 +25,7 @@ export default function Footer() {
             </div>
           </div>
           <a
-            href="tel:0909999999"
+            href="tel:0935278703"
             className="rounded-full bg-white px-6 py-2.5 text-sm font-bold text-primary transition hover:bg-red-50"
           >
             Gọi ngay

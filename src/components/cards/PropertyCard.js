@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 function formatPrice(price) {
   const n = Number(price)
@@ -11,12 +12,11 @@ function formatPrice(price) {
 }
 
 export default function PropertyCard({ property, promoBadge = '' }) {
-  const images = (() => {
+  const images = useMemo(() => {
     if (!property.images || property.images.length === 0) return [property.thumbnail]
-    // Nếu ảnh đầu tiên đã là thumbnail thì không duplicate
     const imgUrls = property.images.map(i => i.imageUrl)
     return imgUrls[0] === property.thumbnail ? imgUrls : [property.thumbnail, ...imgUrls]
-  })()
+  }, [property.images, property.thumbnail])
 
   const [idx, setIdx] = useState(0)
   const [hovered, setHovered] = useState(false)
@@ -39,12 +39,18 @@ export default function PropertyCard({ property, promoBadge = '' }) {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        <img
-          src={images[idx]}
-          alt={property.title}
-          className="h-full w-full object-cover transition-transform duration-500"
+        <div
+          className="h-full w-full transition-transform duration-500"
           style={{ transform: hovered ? 'scale(1.05)' : 'scale(1)' }}
-        />
+        >
+          <Image
+            src={images[idx]}
+            alt={property.title}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover"
+          />
+        </div>
 
         {/* Prev / Next arrows */}
         {images.length > 1 && (

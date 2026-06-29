@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function ProjectCard({ project }) {
   const images = (() => {
@@ -31,12 +32,18 @@ export default function ProjectCard({ project }) {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        <img
-          src={images[idx]}
-          alt={project.name}
-          className="h-full w-full object-cover transition-transform duration-500"
+        <div
+          className="h-full w-full transition-transform duration-500"
           style={{ transform: hovered ? 'scale(1.05)' : 'scale(1)' }}
-        />
+        >
+          <Image
+            src={images[idx]}
+            alt={project.name}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover"
+          />
+        </div>
 
         {/* Prev / Next arrows */}
         {images.length > 1 && (

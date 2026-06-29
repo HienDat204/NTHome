@@ -7,7 +7,11 @@ async function getProject(slug) {
   try {
     return await prisma.project.findUnique({
       where: { slug },
-      include: { images: { orderBy: { id: 'asc' } } }
+      select: {
+        id: true, slug: true, name: true, investor: true, address: true,
+        description: true, highlightInfo: true, thumbnail: true,
+        images: { select: { imageUrl: true }, orderBy: { id: 'asc' } },
+      }
     });
   } catch (error) {
     console.error("ProjectDetailPage DB fallback:", error);

@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo } from 'react'
 import Link from 'next/link'
 import PropertyCard from '@/components/cards/PropertyCard'
 import {
@@ -41,64 +42,62 @@ export default function PropertyListingView({
   const district = searchParams.district || ''
   const listingTypeFilter = searchParams.listingTypeFilter || ''
 
-  // Trang con (ban_nha, cho_thue_mat_bang…): dùng listingType cụ thể để lọc đúng sub-type.
-  // Trang cha (sale, rent, all): dùng parentListingType nếu có.
-  const filterType = (() => {
+  const filterType = useMemo(() => {
     if (listingType !== LISTING_TYPES.all.value && listingType !== 'sale' && listingType !== 'rent') {
-      // Đây là trang con — dùng listingType cụ thể
       return listingType
     }
-    // Trang cha — dùng parentListingType hoặc listingType
     return parentListingType || listingType
-  })()
+  }, [listingType, parentListingType])
 
-  const filteredProperties = filterProperties(properties, {
+  const filteredProperties = useMemo(() => filterProperties(properties, {
     listingType: filterType,
     q: query,
     city,
     district,
     listingTypeFilter,
-  })
+  }), [properties, filterType, query, city, district, listingTypeFilter])
 
-  const renderedProperties = filteredProperties.map((property) => ({
+  const renderedProperties = useMemo(() => filteredProperties.map((property) => ({
     ...property,
     price: property.price?.toString?.() ?? String(property.price),
-  }))
+  })), [filteredProperties])
 
-  const cities = Array.from(
-    new Map(
-      properties
-        .map((p) => [normalizeText(p.city), p.city])
-        .filter(([k, v]) => k && v),
-    ).values(),
-  ).filter(Boolean).slice(0, 6)
+  const cities = useMemo(() =>
+    Array.from(
+      new Map(
+        properties
+          .map((p) => [normalizeText(p.city), p.city])
+          .filter(([k, v]) => k && v),
+      ).values(),
+    ).filter(Boolean).slice(0, 6)
+  , [properties])
 
-  const districts = Array.from(
-    new Map(
-      properties
-        .map((p) => [normalizeText(p.district), p.district])
-        .filter(([k, v]) => k && v),
-    ).values(),
-  ).filter(Boolean).slice(0, 6)
+  const districts = useMemo(() =>
+    Array.from(
+      new Map(
+        properties
+          .map((p) => [normalizeText(p.district), p.district])
+          .filter(([k, v]) => k && v),
+      ).values(),
+    ).filter(Boolean).slice(0, 6)
+  , [properties])
 
-  // Available listingType values — always show pills for the active tab
-  const availableListingTypes = (() => {
+  const availableListingTypes = useMemo(() => {
     const isOnSale = LEGACY_SALE_VALUES.includes(filterType)
     const isOnRent = LEGACY_RENT_VALUES.includes(filterType)
 
-    const pool = properties.filter((p) => {
-      if (isOnSale)  return LEGACY_SALE_VALUES.includes(p.listingType)
-      if (isOnRent)  return LEGACY_RENT_VALUES.includes(p.listingType)
-      return true
-    })
+    const pool = isOnSale
+      ? properties.filter(p => LEGACY_SALE_VALUES.includes(p.listingType))
+      : isOnRent
+        ? properties.filter(p => LEGACY_RENT_VALUES.includes(p.listingType))
+        : properties
 
     const types = new Set(pool.map((p) => p.listingType).filter(Boolean))
 
-    // Always show pills for the active tab type; grey out ones with no data
     if (isOnSale)  return Object.values(SALE_TYPES).map(t => ({ ...t, hasData: types.has(t.value) }))
     if (isOnRent)  return Object.values(RENT_TYPES).map(t => ({ ...t, hasData: types.has(t.value) }))
     return []
-  })()
+  }, [properties, filterType])
 
   const isOnSale = LEGACY_SALE_VALUES.includes(filterType)
   const isOnRent = LEGACY_RENT_VALUES.includes(filterType)

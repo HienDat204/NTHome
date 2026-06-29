@@ -5,7 +5,13 @@ import { requireAdminWriteAccess } from '@/lib/admin-api-guard'
 export async function GET() {
   try {
     const properties = await prisma.property.findMany({
-      include: { images: { orderBy: { id: 'asc' } } },
+      select: {
+        id: true, slug: true, title: true, price: true, area: true,
+        bedrooms: true, bathrooms: true, address: true, district: true,
+        city: true, listingType: true, propertyType: true, promoBadge: true,
+        thumbnail: true,
+        images: { select: { imageUrl: true }, orderBy: { id: 'asc' } },
+      },
       orderBy: { createdAt: 'desc' }
     })
     return NextResponse.json(properties)
@@ -44,7 +50,13 @@ export async function POST(request) {
 
     const newProperty = await prisma.property.create({
       data: createData,
-      include: { images: { orderBy: { id: 'asc' } } }
+      select: {
+        id: true, slug: true, title: true, price: true, area: true,
+        bedrooms: true, bathrooms: true, address: true, district: true,
+        city: true, listingType: true, propertyType: true, promoBadge: true,
+        thumbnail: true,
+        images: { select: { imageUrl: true }, orderBy: { id: 'asc' } },
+      }
     })
 
     return NextResponse.json(newProperty, { status: 201 })
