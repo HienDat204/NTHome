@@ -1,5 +1,11 @@
 import { NextResponse } from 'next/server'
 import { requireAdminWriteAccess } from '@/lib/admin-api-guard'
+import { writeFile, mkdir } from 'fs/promises'
+import { existsSync } from 'fs'
+import path from 'path'
+import { randomUUID } from 'crypto'
+
+const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads')
 
 export async function POST(request) {
   try {
@@ -9,28 +15,57 @@ export async function POST(request) {
     const formData = await request.formData()
     const file = formData.get('file')
 
-    if (!file) {
+    if (!file || typeof file === 'string') {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    // Đọc file thành ArrayBuffer
+    const mimeType = file.type || 'image/jpeg'
+
+    // Validate MIME type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml']
+    if (!allowedTypes.includes(mimeType)) {
+      return NextResponse.json({ error: 'Invalid file type. Only images are allowed.' }, { status: 400 })
+    }
+
+    // Max 10 MB
+    const maxSize = 10 * 1024 * 1024
+    if (file.size > maxSize) {
+      return NextResponse.json({ error: 'File too large. Maximum size is 10 MB.' }, { status: 400 })
+    }
+
+    // Ensure upload directory exists
+    if (!existsSync(UPLOAD_DIR)) {
+      await mkdir(UPLOAD_DIR, { recursive: true })
+    }
+
+    // Determine extension from mime type
+    const extMap = {
+      'image/jpeg': '.jpg',
+      'image/png': '.png',
+      'image/gif': '.gif',
+      'image/webp': '.webp',
+      'image/svg+xml': '.svg',
+    }
+    const ext = extMap[mimeType] || '.jpg'
+
+    // Generate unique filename: uuid-timestamp.ext
+    const filename = `${randomUUID()}-${Date.now()}${ext}`
+    const filepath = path.join(UPLOAD_DIR, filename)
+
+    // Write file to disk
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
-    
-    // Convert thành base64
-    const base64String = buffer.toString('base64')
-    
-    // Lấy MIME type
-    const mimeType = file.type || 'image/jpeg'
-    
-    // Kết hợp: data:image/jpeg;base64,<base64data>
-    const dataUrl = `data:${mimeType};base64,${base64String}`
+    await writeFile(filepath, buffer)
 
-    return NextResponse.json({ 
-      success: true, 
-      image: dataUrl,
-      base64: base64String,
-      mimeType: mimeType
+    // Return public URL path (starts with /uploads/)
+    const imageUrl = `/uploads/${filename}`
+
+    return NextResponse.json({
+      success: true,
+      imageUrl,
+      filename,
+      mimeType,
+      size: buffer.length,
     })
   } catch (error) {
     console.error('Upload error:', error)

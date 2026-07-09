@@ -1,5 +1,17 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { unlink } from 'fs/promises';
+import { existsSync } from 'fs';
+import path from 'path';
+
+function isLocalFile(url) {
+  return typeof url === 'string' && url.startsWith('/uploads/');
+}
+
+function getFilePath(url) {
+  if (!isLocalFile(url)) return null;
+  return path.join(process.cwd(), 'public', url);
+}
 
 // DELETE /api/projects/[id]/images/[imageId] - Xóa ảnh
 export async function DELETE(request, { params }) {
@@ -8,7 +20,6 @@ export async function DELETE(request, { params }) {
     const projectId = parseInt(id);
     const imageIdInt = parseInt(imageId);
 
-    // Kiểm tra ảnh có tồn tại và thuộc project này không
     const image = await prisma.projectImage.findFirst({
       where: {
         id: imageIdInt,
@@ -23,12 +34,23 @@ export async function DELETE(request, { params }) {
       );
     }
 
-    // Xóa ảnh
+    // Xóa file vật lý nếu là file local
+    if (isLocalFile(image.imageUrl)) {
+      const filepath = getFilePath(image.imageUrl);
+      try {
+        if (existsSync(filepath)) {
+          await unlink(filepath);
+          console.log(`Deleted file: ${filepath}`);
+        }
+      } catch (fsErr) {
+        console.error(`Failed to delete file ${filepath}:`, fsErr.message);
+      }
+    }
+
     await prisma.projectImage.delete({
       where: { id: imageIdInt }
     });
 
-    // Đồng bộ thumbnail theo ảnh đầu tiên còn lại
     const firstImage = await prisma.projectImage.findFirst({
       where: { projectId },
       orderBy: { id: 'asc' }

@@ -54,8 +54,8 @@ export default function EditArticlePage({ params }) {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
 
-      setThumbnailPreview(response.data.image)
-      setFormData(prev => ({ ...prev, thumbnail: response.data.image }))
+      setThumbnailPreview(response.data.imageUrl)
+      setFormData(prev => ({ ...prev, thumbnail: response.data.imageUrl }))
     } catch (err) {
       setError('Lỗi upload ảnh: ' + (err.response?.data?.error || err.message))
     }

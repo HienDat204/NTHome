@@ -4,20 +4,18 @@ import { useState } from 'react'
 import Image from 'next/image'
 
 export default function PropertyGallery({ thumbnail, images, title }) {
-  // Tạo mảng tất cả ảnh: thumbnail + images
-  const allImages = [
-    { id: 'thumbnail', imageUrl: thumbnail },
-    ...images
-  ]
+  // thumbnail is synced to the first image by the upload POST handler, so
+  // we use only the images array to avoid displaying a duplicate.
+  const galleryImages = images
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1))
+    setCurrentIndex((prev) => (prev === 0 ? galleryImages.length - 1 : prev - 1))
   }
 
   const goToNext = () => {
-    setCurrentIndex((prev) => (prev === allImages.length - 1 ? 0 : prev + 1))
+    setCurrentIndex((prev) => (prev === galleryImages.length - 1 ? 0 : prev + 1))
   }
 
   const goToImage = (index) => {
@@ -29,7 +27,7 @@ export default function PropertyGallery({ thumbnail, images, title }) {
       {/* Ảnh chính với mũi tên */}
       <div className="relative overflow-hidden rounded-[2rem] bg-slate-900 group h-[500px]">
         <Image
-          src={allImages[currentIndex].imageUrl}
+          src={galleryImages[currentIndex]?.imageUrl || ''}
           alt={title}
           fill
           sizes="(max-width: 1024px) 100vw, 60vw"
@@ -38,7 +36,7 @@ export default function PropertyGallery({ thumbnail, images, title }) {
         />
 
         {/* Mũi tên trái */}
-        {allImages.length > 1 && (
+        {galleryImages.length > 1 && (
           <>
             <button
               onClick={goToPrevious}
@@ -63,16 +61,16 @@ export default function PropertyGallery({ thumbnail, images, title }) {
 
             {/* Indicator số ảnh */}
             <div className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1 rounded-full text-sm">
-              {currentIndex + 1} / {allImages.length}
+              {currentIndex + 1} / {galleryImages.length}
             </div>
           </>
         )}
       </div>
 
       {/* Thumbnails bên dưới */}
-      {allImages.length > 1 && (
+      {galleryImages.length > 1 && (
         <div className="grid gap-4 sm:grid-cols-4">
-          {allImages.map((image, index) => (
+          {galleryImages.map((image, index) => (
             <button
               key={image.id}
               onClick={() => goToImage(index)}

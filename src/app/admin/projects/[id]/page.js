@@ -61,7 +61,7 @@ export default function EditProjectPage({ params }) {
           headers: { 'Content-Type': 'multipart/form-data' }
         })
 
-        return response.data.image
+        return response.data.imageUrl
       })
 
       const uploadedImages = await Promise.all(uploadPromises)
