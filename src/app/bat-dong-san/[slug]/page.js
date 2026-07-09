@@ -22,7 +22,7 @@ async function getProperty(slug) {
     return await prisma.property.findUnique({
       where: { slug },
       select: {
-        id: true, slug: true, title: true, price: true, area: true,
+        id: true, slug: true, title: true, description: true, price: true, area: true,
         bedrooms: true, bathrooms: true, address: true, district: true,
         city: true, listingType: true, propertyType: true, promoBadge: true,
         thumbnail: true,

@@ -32,7 +32,7 @@ export default async function ArticleDetailPage({ params }) {
               {new Date(article.createdAt).toLocaleDateString("vi-VN")}
             </span>
           </div>
-          <p className="mt-4 text-lg leading-8 text-slate-700">
+          <p className="mt-4 whitespace-pre-wrap text-lg leading-8 text-slate-700">
             {article.content}
           </p>
         </div>

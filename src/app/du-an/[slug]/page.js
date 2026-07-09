@@ -48,7 +48,7 @@ export default async function ProjectDetailPage({ params }) {
               Nhà đầu tư: {project.investor}
             </p>
             <p className="mt-4 text-slate-600">Địa chỉ: {project.address}</p>
-            <p className="mt-6 leading-8 text-slate-700">
+            <p className="mt-6 whitespace-pre-wrap leading-8 text-slate-700">
               {project.description}
             </p>
           </div>

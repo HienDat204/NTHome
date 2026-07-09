@@ -7,9 +7,10 @@ export async function GET(request, { params }) {
     const property = await prisma.property.findUnique({
       where: { id: parseInt(params.id) },
       select: {
-        id: true, slug: true, title: true, price: true, area: true,
+        id: true, slug: true, title: true, description: true, price: true, area: true,
         bedrooms: true, bathrooms: true, address: true, district: true,
         city: true, listingType: true, propertyType: true, promoBadge: true,
+        featured: true,
         thumbnail: true,
         images: { select: { id: true, imageUrl: true }, orderBy: { id: 'asc' } },
       }

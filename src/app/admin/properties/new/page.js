@@ -147,14 +147,17 @@ export default function NewPropertyPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700">Mô tả</label>
+            <label className="block text-sm font-medium text-slate-700">
+              Mô tả <span className="text-xs text-slate-400">(xuống dòng và dấu - sẽ được giữ nguyên)</span>
+            </label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
-              rows="4"
-              className="mt-2 w-full rounded-lg border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-secondary/50"
-            ></textarea>
+              rows={10}
+              className="mt-2 w-full resize-y rounded-lg border border-slate-300 px-4 py-2 font-mono text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-secondary/50"
+              placeholder="Nhập mô tả chi tiết tại đây..."
+            />
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
