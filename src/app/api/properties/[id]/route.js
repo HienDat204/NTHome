@@ -11,7 +11,7 @@ export async function GET(request, { params }) {
         bedrooms: true, bathrooms: true, address: true, district: true,
         city: true, listingType: true, propertyType: true, promoBadge: true,
         thumbnail: true,
-        images: { select: { imageUrl: true }, orderBy: { id: 'asc' } },
+        images: { select: { id: true, imageUrl: true }, orderBy: { id: 'asc' } },
       }
     })
     if (!property) return NextResponse.json({ error: 'Not found' }, { status: 404 })

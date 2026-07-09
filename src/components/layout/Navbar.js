@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { SALE_TYPES, RENT_TYPES } from "@/lib/listings";
 
@@ -50,7 +51,13 @@ export default function Navbar() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl">🏠</span>
+          <Image
+            src="/images/logo.png"
+            alt="Kiên Hưng Group"
+            width={36}
+            height={36}
+            className="object-contain"
+          />
           <span className="text-lg font-bold text-white">Kiên Hưng Group</span>
         </Link>
 

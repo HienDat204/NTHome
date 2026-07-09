@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 
@@ -24,10 +25,13 @@ export default function AdminLayout({ children }) {
     <div className="flex min-h-screen bg-slate-50">
       <aside className="hidden w-64 border-r border-slate-200 bg-white md:block sticky top-0 h-screen overflow-y-auto">
         <div className="p-6">
-          <h1 className="text-2xl font-semibold text-slate-900">
-            Kiên Hưng Group
-          </h1>
-          <p className="mt-1 text-xs text-slate-500">Admin Dashboard</p>
+          <Link href="/" className="flex items-center gap-2">
+            <Image src="/images/logo.png" alt="Kiên Hưng Group" width={28} height={28} className="object-contain" />
+            <div>
+              <h1 className="text-lg font-semibold text-slate-900">Kiên Hưng Group</h1>
+              <p className="text-xs text-slate-500">Admin Dashboard</p>
+            </div>
+          </Link>
         </div>
         <nav className="space-y-1 px-4 py-6">
           {links.map((item) => (

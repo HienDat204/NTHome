@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LISTING_TYPES } from "@/lib/listings";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -39,7 +39,13 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-2xl">🏠</span>
+              <Image
+                src="/images/logo.png"
+                alt="Kiên Hưng Group"
+                width={32}
+                height={32}
+                className="object-contain"
+              />
               <span className="text-xl font-bold text-white">
                 Kiên Hưng Group
               </span>

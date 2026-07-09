@@ -9,7 +9,7 @@ export async function GET(request, { params }) {
       select: {
         id: true, slug: true, name: true, investor: true, address: true,
         description: true, highlightInfo: true, thumbnail: true,
-        images: { select: { imageUrl: true }, orderBy: { id: 'asc' } },
+        images: { select: { id: true, imageUrl: true }, orderBy: { id: 'asc' } },
       }
     })
     if (!project) return NextResponse.json({ error: 'Not found' }, { status: 404 })

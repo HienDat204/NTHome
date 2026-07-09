@@ -34,7 +34,7 @@ export default async function HomePage() {
           id: true, slug: true, title: true, price: true, area: true,
           bedrooms: true, bathrooms: true, address: true, district: true,
           city: true, listingType: true, propertyType: true, promoBadge: true,
-          thumbnail: true, images: { select: { imageUrl: true }, orderBy: { id: "asc" } },
+          thumbnail: true, images: { select: { id: true, imageUrl: true }, orderBy: { id: "asc" } },
         },
       }),
       prisma.property.findMany({
@@ -44,7 +44,7 @@ export default async function HomePage() {
           id: true, slug: true, title: true, price: true, area: true,
           bedrooms: true, bathrooms: true, address: true, district: true,
           city: true, listingType: true, propertyType: true, promoBadge: true,
-          thumbnail: true, images: { select: { imageUrl: true }, orderBy: { id: "asc" } },
+          thumbnail: true, images: { select: { id: true, imageUrl: true }, orderBy: { id: "asc" } },
         },
       }),
       prisma.article.findMany({

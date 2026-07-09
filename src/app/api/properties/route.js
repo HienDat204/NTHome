@@ -10,7 +10,7 @@ export async function GET() {
         bedrooms: true, bathrooms: true, address: true, district: true,
         city: true, listingType: true, propertyType: true, promoBadge: true,
         thumbnail: true,
-        images: { select: { imageUrl: true }, orderBy: { id: 'asc' } },
+        images: { select: { id: true, imageUrl: true }, orderBy: { id: 'asc' } },
       },
       orderBy: { createdAt: 'desc' }
     })
@@ -55,7 +55,7 @@ export async function POST(request) {
         bedrooms: true, bathrooms: true, address: true, district: true,
         city: true, listingType: true, propertyType: true, promoBadge: true,
         thumbnail: true,
-        images: { select: { imageUrl: true }, orderBy: { id: 'asc' } },
+        images: { select: { id: true, imageUrl: true }, orderBy: { id: 'asc' } },
       }
     })
 

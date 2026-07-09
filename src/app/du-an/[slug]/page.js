@@ -10,7 +10,7 @@ async function getProject(slug) {
       select: {
         id: true, slug: true, name: true, investor: true, address: true,
         description: true, highlightInfo: true, thumbnail: true,
-        images: { select: { imageUrl: true }, orderBy: { id: 'asc' } },
+        images: { select: { id: true, imageUrl: true }, orderBy: { id: 'asc' } },
       }
     });
   } catch (error) {
