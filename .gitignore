@@ -1,6 +1,12 @@
 node_modules
 .next
 .env
+.env.local
+.env.*.local
 database/database.db
+prisma/database/database.db
+prisma/database/*.db
+prisma/prisma
+prisma/dev.db
 public/uploads
 .DS_Store
